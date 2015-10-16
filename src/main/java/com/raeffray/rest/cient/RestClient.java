@@ -82,10 +82,10 @@ public class RestClient {
 				MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,
 				authKey);
 
-		logger.info("posting!");
+		logger.debug("posting!");
 		ClientResponse response = builder.post(ClientResponse.class,
 				request.parseJson());
-		logger.info("posted!");
+		logger.debug("posted!");
 
 		if (response.getStatus() != 200) {
 			logger.error("Fail");
@@ -93,7 +93,7 @@ public class RestClient {
 			throw new RuntimeException("Failed : HTTP error code : "
 					+ response.getStatus());
 		}
-		logger.info("parsing the response");
+		logger.debug("parsing the response");
 		return (JSONArray) new JSONParser().parse(response
 				.getEntity(String.class));
 
@@ -116,7 +116,7 @@ public class RestClient {
 	}
 
 	public long createNode(String[] labels, RawData rawData) throws Exception {
-		logger.info("Creating request");
+		logger.debug("Creating request");
 		BatchOperationRequest request = new BatchOperationRequest();
 		int countIds = -1;
 		int lastId = 0;
@@ -133,7 +133,7 @@ public class RestClient {
 						GraphResourceCatalog.BATCH_OPERATION_LABEL_CREATE
 								.getResource(), "{" + lastId + "}"), JsonUtils
 						.parseJsonSingleValue(labels));
-		logger.info("request created");
+		logger.debug("request created");
 
 		JSONArray executeBatchOperation = executeBatchOperation(request);
 
@@ -144,7 +144,7 @@ public class RestClient {
 
 	public JSONArray createNodes(String[] labels, List<RawData> rawDataList)
 			throws Exception {
-		logger.info("Creating request");
+		logger.debug("Creating request");
 		BatchOperationRequest request = new BatchOperationRequest();
 		int countIds = -1;
 		int lastId = 0;
@@ -163,7 +163,7 @@ public class RestClient {
 									.getResource(), "{" + lastId + "}"),
 					JsonUtils.parseJsonSingleValue(labels));
 		}
-		logger.info("request created");
+		logger.debug("request created");
 		return executeBatchOperation(request);
 	}
 
@@ -174,7 +174,7 @@ public class RestClient {
 
 		String url = Configuration.getConfiguration().getString("graph.db.url");
 
-		logger.info("Creating request");
+		logger.debug("Creating request");
 		BatchOperationRequest request = new BatchOperationRequest();
 		int countIds = 0;
 		int lastId = 0;
@@ -222,7 +222,7 @@ public class RestClient {
 									.getResource(), "{" + lastId + "}"),
 					serviceRelationshipDescriber.parseJson());
 		}
-		logger.info("request created");
+		logger.debug("request created");
 		JSONArray executeBatchOperation = executeBatchOperation(request);
 		return executeBatchOperation;
 	}
@@ -233,7 +233,7 @@ public class RestClient {
 
 		String url = Configuration.getConfiguration().getString("graph.db.url");
 
-		logger.info("Creating request");
+		logger.debug("Creating request");
 		BatchOperationRequest request = new BatchOperationRequest();
 		int countIds = 0;
 		int lastId = 0;
@@ -268,7 +268,7 @@ public class RestClient {
 						relationshipDescriber.parseJson());
 			}
 		}
-		logger.info("request created");
+		logger.debug("request created");
 		JSONArray executeBatchOperation = executeBatchOperation(request);
 		return executeBatchOperation;
 	}

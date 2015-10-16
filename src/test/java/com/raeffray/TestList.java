@@ -1,14 +1,10 @@
 package com.raeffray;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import org.junit.Test;
 
 public class TestList {
 
-	@Test
 	public void testSplitList() {
 
 		List<String> list = new ArrayList<String>();

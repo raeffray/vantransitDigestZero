@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -50,73 +51,91 @@ public class RouteNodeHandler {
 
 	Map<String, Long> serviceNodesIds;
 
+	Map<String, Long> agencyNodesIds;
+
 	Map<String, Long> serviceDatesNodesIds;
 
 	public void loadCSVs() throws Exception {
 
 		CSVReader reader = new CSVReader();
 
+		logger.info("Loading [Agency]");
 		agencyList = ReflectionData.getInstance().buildList(Agency.class,
 				reader.readCSVForData(Agency.class));
 
-		// List<Transfers> TransferList = ReflectionData.getInstance()
-		// .buildList(Transfers.class,
-		// reader.readCSVForData(Transfers.class));
-
+		logger.info("Loading [Routes]");
 		routeList = ReflectionData.getInstance().buildList(Routes.class,
 				reader.readCSVForData(Routes.class));
 
+		logger.info("Loading [Trips]");
 		tripList = ReflectionData.getInstance().buildList(Trips.class,
 				reader.readCSVForData(Trips.class));
 
-		// List<Shapes> shapeList = ReflectionData.getInstance().buildList(
-		// Shapes.class, reader.readCSVForData(Shapes.class));
-
+		logger.info("Loading [Stops]");
 		stopList = ReflectionData.getInstance().buildList(Stops.class,
 				reader.readCSVForData(Stops.class));
 
+		logger.info("Loading [StopTimes]");
 		stopTimesList = ReflectionData.getInstance().buildList(StopTimes.class,
 				reader.readCSVForData(StopTimes.class));
 
+		logger.info("Loading [Calendar]");
 		serviceList = ReflectionData.getInstance().buildList(Calendar.class,
 				reader.readCSVForData(Calendar.class));
 
+		logger.info("Loading [CalendarDates]");
 		calendarDateList = ReflectionData.getInstance()
 				.buildList(CalendarDates.class,
 						reader.readCSVForData(CalendarDates.class));
+		
+		// List<Transfers> TransferList = ReflectionData.getInstance()
+				// .buildList(Transfers.class,
+				// reader.readCSVForData(Transfers.class));
+		
+		// List<Shapes> shapeList = ReflectionData.getInstance().buildList(
+				// Shapes.class, reader.readCSVForData(Shapes.class));
 	}
 
-	@Test
-	public void createSetAgencyNode() {
-
+	public void start() {
 		try {
-
-			logger.info("start of Processing");
 
 			loadCSVs();
 
 			createSetServiceNode();
 
+			createAgencyNode();
+
 			for (Agency agency : agencyList) {
-				String[] fateherLabels = { "AGENCY", "TEST" };
-
-				long fatherId = RestClient.getInstance().createNode(
-						fateherLabels, agency);
-
-				createSetRouteNode(agency.getAgency_id(), fatherId);
-
+				Long agencyNodeId = agencyNodesIds.get(agency.getAgency_id());
+				createSetRouteNode(agency.getAgency_id(), agencyNodeId);
 			}
-
-			logger.info("end of Processing");
-
+			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO: handle exception
 		}
 	}
 
-	public void createSetRouteNode(String agencyId, long agencyNodeId)
+	private void createAgencyNode() throws Exception {
+
+		logger.info("Creating [Agency] node");
+		
+		String[] serviceLabels = { "AGENCY", "TEST" };
+
+		List<RawData> rawList = new ArrayList<RawData>();
+
+		rawList.addAll(agencyList);
+
+		JSONArray responseNodes = RestClient.getInstance().createNodes(
+				serviceLabels, rawList);
+
+		agencyNodesIds = extractCreatedAgencyNodes(responseNodes);
+
+	}
+
+	private void createSetRouteNode(String agencyId, long agencyNodeId)
 			throws Exception {
+		
+		logger.info("Creating [Route] nodes");
 
 		List<RawData> routesFromAgency = findRouteByAgencyId(routeList,
 				agencyId);
@@ -133,20 +152,23 @@ public class RouteNodeHandler {
 
 		for (RawData rawRoute : routesFromAgency) {
 			Routes route = (Routes) rawRoute;
+			logger.info("Creating [Route] code ["+route.getRoute_short_name()+"]  node");
 			Long routeFather = routeNodesIds.get(route.getRoute_id());
 			createSetTripNode(route.getRoute_id(), routeFather);
 		}
 	}
 
-	public void createSetTripNode(String routeId, long routeNodeId)
+	private void createSetTripNode(String routeId, long routeNodeId)
 			throws Exception {
+
+		logger.info("Creating [Trips] nodes");
 
 		List<RawData> tripsFromRoute = findTripById(tripList, routeId);
 
 		String[] childLabels = { "TRIP", "TEST" };
 		RelationshipDescriber relDesc = new RelationshipDescriber("TRAVELS");
 		RelationshipDescriber serviceDesc = new RelationshipDescriber("EXECUTE");
-		
+
 		JSONArray responseTripStructure = RestClient.getInstance()
 				.createNodeStructureForTrip(tripsFromRoute, childLabels,
 						relDesc, serviceDesc, serviceNodesIds, routeNodeId);
@@ -154,13 +176,16 @@ public class RouteNodeHandler {
 
 		for (RawData rawData : tripsFromRoute) {
 			Trips trip = (Trips) rawData;
+			logger.info("Creating [Trip] tripId ["+trip.getTrip_id()+"]  node");
 			Long nodeFather = tripNodesIds.get(trip.getTrip_id());
 			createSetStopTimesNode(trip.getTrip_id(), nodeFather);
 		}
 	}
 
-	public void createSetServiceNode() throws Exception {
+	private void createSetServiceNode() throws Exception {
 
+		logger.info("Creating [Service] nodes");
+		
 		String[] serviceLabels = { "SERVICE", "TEST" };
 
 		List<RawData> rawList = new ArrayList<RawData>();
@@ -178,7 +203,7 @@ public class RouteNodeHandler {
 		}
 	}
 
-	public void createSetServiceDateNode(String serviceId, long serviceNodeId)
+	private void createSetServiceDateNode(String serviceId, long serviceNodeId)
 			throws Exception {
 
 		List<RawData> calendarDatesFromTrip = findCalendarDateByServiceId(
@@ -194,8 +219,10 @@ public class RouteNodeHandler {
 
 	}
 
-	public void createSetStopTimesNode(String tripId, long tripNodeId)
+	private void createSetStopTimesNode(String tripId, long tripNodeId)
 			throws Exception {
+		
+		logger.info("Creating [StopTimes] nodes");
 
 		List<RawData> stopsTimesFromTrip = findStopTimesByTripId(stopTimesList,
 				tripId);
@@ -210,12 +237,13 @@ public class RouteNodeHandler {
 
 		for (RawData rawData : stopsTimesFromTrip) {
 			StopTimes stopTime = (StopTimes) rawData;
+			logger.debug("Creating [StopTimes] for tripId ["+stopTime.getTrip_id()+"]  node");
 			Long nodeFather = stopTimesNodesIds.get(stopTime.getStop_id());
 			createSetStopsNode(stopTime.getStop_id(), nodeFather);
 		}
 	}
 
-	public void createSetStopsNode(String stopId, long stopTimeNodeId)
+	private void createSetStopsNode(String stopId, long stopTimeNodeId)
 			throws Exception {
 
 		List<RawData> stopsFromTrip = findStopByStopId(stopList, stopId);
@@ -262,6 +290,27 @@ public class RouteNodeHandler {
 				JSONObject jsData = (JSONObject) jsBody.get("data");
 				JSONObject jsMetadata = (JSONObject) jsBody.get("metadata");
 				Object objRouteId = jsData.get("tripId");
+				if (objRouteId != null) {
+					createNodes.put((String) objRouteId,
+							(Long) jsMetadata.get("id"));
+				}
+			}
+		}
+		return createNodes;
+	}
+
+	private Map<String, Long> extractCreatedAgencyNodes(
+			JSONArray responseStructure) throws Exception {
+		Map<String, Long> createNodes = new HashMap<String, Long>();
+		for (Object object : responseStructure) {
+
+			JSONObject item = (JSONObject) object;
+
+			JSONObject jsBody = (JSONObject) item.get("body");
+			if (jsBody != null) {
+				JSONObject jsData = (JSONObject) jsBody.get("data");
+				JSONObject jsMetadata = (JSONObject) jsBody.get("metadata");
+				Object objRouteId = jsData.get("agencyId");
 				if (objRouteId != null) {
 					createNodes.put((String) objRouteId,
 							(Long) jsMetadata.get("id"));
