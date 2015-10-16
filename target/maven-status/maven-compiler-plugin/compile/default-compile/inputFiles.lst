@@ -1,0 +1,16 @@
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Shapes.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/rest/cient/enums/GraphResourceCatalog.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/reflection/ReflectionData.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Stops.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Transfers.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/rest/cient/RestClient.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/commons/Configuration.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/RawData.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Agency.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Routes.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/StopTimes.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/CalendarDates.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Calendar.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/csv/CSVReader.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/App.java
+/Users/i842771/node/vantransitDigest/src/main/java/com/raeffray/raw/data/Trips.java
