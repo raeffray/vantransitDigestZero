@@ -22,7 +22,6 @@
 						</manifest>
 					</archive>
 				</configuration>
-
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -44,7 +43,14 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<configuration>
+					<mainClass>com.raeffray.App</mainClass>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<packaging>jar</packaging>
