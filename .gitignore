@@ -1,7 +1,6 @@
 .classpath
 .project
 .settings
-*/target/*
-*.class
-/target/
-*.properties
+**/target
+**/google_transit
+src/main/resources/*.properties
