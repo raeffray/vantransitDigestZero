@@ -1,16 +1,12 @@
 package com.raeffray.graph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
@@ -39,6 +35,10 @@ public class RelationshipDescriber {
 
 	public String getTo() {
 		return to;
+	}
+	
+	public Object getAttribute(String key){
+		return attributes.get(key);
 	}
 
 	public void addAttribute(String key, Object value) {

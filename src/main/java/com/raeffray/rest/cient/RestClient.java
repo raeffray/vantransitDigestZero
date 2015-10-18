@@ -1,6 +1,7 @@
 package com.raeffray.rest.cient;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -167,10 +168,15 @@ public class RestClient {
 		return executeBatchOperation(request);
 	}
 
-	public JSONArray createNodeStructureForTrip(List<RawData> childNodes,
-			String[] childLabels, RelationshipDescriber relationshipDescriber,
+	public JSONArray createNodeStructureForTrip(
+			List<RawData> childNodes,
+			String[] childLabels,
+			RelationshipDescriber relationshipDescriber,
 			RelationshipDescriber serviceRelationshipDescriber,
-			Map<String, Long> nodeServiceIds, long fatherId) throws Exception {
+			Map<String, Long> nodeServiceIds,
+			long fatherId,
+			Map<String, Collection<RelationshipDescriber>> stopRelationDescribers)
+			throws Exception {
 
 		String url = Configuration.getConfiguration().getString("graph.db.url");
 
@@ -201,6 +207,7 @@ public class RestClient {
 							GraphResourceCatalog.BATCH_OPERATION_LABEL_CREATE
 									.getResource(), "{" + lastId + "}"),
 					JsonUtils.parseJsonSingleValue(childLabels));
+
 			relationshipDescriber.setTo("{" + lastId + "}");
 			serviceRelationshipDescriber.setTo((url + MessageFormat.format(
 					GraphResourceCatalog.NODE_FETCH.getResource(),
@@ -212,6 +219,27 @@ public class RestClient {
 							GraphResourceCatalog.NODE_CREATE_RELATIONSHIP
 									.getResource(), String.valueOf(fatherId))),
 					relationshipDescriber.parseJson());
+
+			Collection<RelationshipDescriber> stopRelationship = stopRelationDescribers
+					.get(trip.getTrip_id());
+
+			for (RelationshipDescriber stopRelaltionDescriber : stopRelationship) {
+
+				stopRelaltionDescriber.setTo((url + MessageFormat.format(
+						GraphResourceCatalog.NODE_FETCH.getResource(), String
+								.valueOf(String.valueOf(stopRelaltionDescriber
+										.getAttribute("stopNodeId"))))));
+
+				request.addOperation(
+						countIds++,
+						GraphResourceCatalog.BATCH_OPERATION_RELATIONSHIP_CREATE
+								.getHttpMethod(), ( MessageFormat
+										.format(GraphResourceCatalog.BATCH_OPERATION_RELATIONSHIP_CREATE
+												.getResource(), "{" + String
+												.valueOf(lastId) + "}")), stopRelaltionDescriber
+								.parseJson());
+
+			}
 
 			request.addOperation(
 					countIds++,
