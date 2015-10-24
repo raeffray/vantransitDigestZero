@@ -120,7 +120,7 @@ public class RouteNodeHandler {
 
 		logger.info("Creating [Stops] node");
 
-		String[] serviceLabels = { "BUSSTOP", "TEST" };
+		String[] serviceLabels = { "BUSSTOP"};
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
@@ -137,7 +137,7 @@ public class RouteNodeHandler {
 
 		logger.info("Creating [Agency] node");
 
-		String[] serviceLabels = { "AGENCY", "TEST" };
+		String[] serviceLabels = { "AGENCY"};
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
@@ -158,7 +158,7 @@ public class RouteNodeHandler {
 		List<RawData> routesFromAgency = findRouteByAgencyId(routeList,
 				agencyId);
 
-		String[] childLabels = { "ROUTE", "TEST" };
+		String[] childLabels = { "ROUTE"};
 
 		RelationshipDescriber relDesc = new RelationshipDescriber("OPERATES");
 
@@ -184,7 +184,7 @@ public class RouteNodeHandler {
 
 		List<RawData> tripsFromRoute = findTripById(tripList, routeId);
 
-		String[] childLabels = { "TRIP", "TEST" };
+		String[] childLabels = { "TRIP"};
 		RelationshipDescriber relDesc = new RelationshipDescriber("TRAVELS");
 		RelationshipDescriber serviceDesc = new RelationshipDescriber("EXECUTE");
 
@@ -208,7 +208,7 @@ public class RouteNodeHandler {
 
 		logger.info("Creating [Service] nodes");
 
-		String[] serviceLabels = { "SERVICE", "TEST" };
+		String[] serviceLabels = { "SERVICE"};
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
@@ -231,7 +231,7 @@ public class RouteNodeHandler {
 		List<RawData> calendarDatesFromTrip = findCalendarDateByServiceId(
 				calendarDateList, serviceId);
 
-		String[] childLabels = { "SERVICE_DATE", "TEST" };
+		String[] childLabels = { "SERVICE_DATE"};
 		RelationshipDescriber relDesc = new RelationshipDescriber(
 				"IN_EFFECT_ON");
 		RestClient.getInstance().createNodeStructure(calendarDatesFromTrip,
