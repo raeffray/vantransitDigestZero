@@ -12,15 +12,16 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.raeffray.raw.data.Agency;
-import com.raeffray.raw.data.Calendar;
-import com.raeffray.raw.data.CalendarDates;
-import com.raeffray.raw.data.Routes;
-import com.raeffray.raw.data.Shapes;
-import com.raeffray.raw.data.StopTimes;
-import com.raeffray.raw.data.Stops;
-import com.raeffray.raw.data.Transfers;
-import com.raeffray.raw.data.Trips;
+import com.gtransit.csv.CSVReader;
+import com.gtransit.raw.data.Agency;
+import com.gtransit.raw.data.Calendar;
+import com.gtransit.raw.data.CalendarDates;
+import com.gtransit.raw.data.Routes;
+import com.gtransit.raw.data.Shapes;
+import com.gtransit.raw.data.StopTimes;
+import com.gtransit.raw.data.Stops;
+import com.gtransit.raw.data.Transfers;
+import com.gtransit.raw.data.Trips;
 
 public class CSVReaderTest {
 	

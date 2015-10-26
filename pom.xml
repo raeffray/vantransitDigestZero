@@ -17,7 +17,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.raeffray.App</mainClass>
+							<mainClass>com.gtransit.App</mainClass>
 							<addClasspath>true</addClasspath>
 						</manifest>
 					</archive>
@@ -48,7 +48,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.4.0</version>
 				<configuration>
-					<mainClass>com.raeffray.App</mainClass>
+					<mainClass>com.gtransit.App</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
