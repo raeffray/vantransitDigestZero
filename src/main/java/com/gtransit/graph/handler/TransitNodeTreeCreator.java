@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.neo4j.graphdb.DynamicRelationshipType;
 
 import com.gtransit.commons.Configuration;
 import com.gtransit.csv.CSVReader;
@@ -20,6 +21,7 @@ import com.gtransit.raw.data.RawData;
 import com.gtransit.raw.data.Routes;
 import com.gtransit.raw.data.StopTimes;
 import com.gtransit.raw.data.Stops;
+import com.gtransit.raw.data.Transfers;
 import com.gtransit.raw.data.Trips;
 import com.gtransit.reflection.ReflectionData;
 import com.gtransit.relationaldb.DbServer;
@@ -32,7 +34,7 @@ public class TransitNodeTreeCreator {
 
 	private List<Agency> agencyList;
 
-	// private List<Transfers> TransferList;
+	private List<Transfers> transferList;
 
 	private List<Routes> routeList;
 
@@ -71,6 +73,10 @@ public class TransitNodeTreeCreator {
 			logger.info("Loading [Trips]");
 			tripList = ReflectionData.getInstance().buildList(Trips.class,
 					reader.readCSVForData(Trips.class));
+			
+			logger.info("Loading [Tranfers]");
+			transferList = ReflectionData.getInstance().buildList(Transfers.class,
+					reader.readCSVForData(Transfers.class));
 
 			logger.info("Loading [Stops]");
 			stopList = ReflectionData.getInstance().buildList(Stops.class,
@@ -137,7 +143,18 @@ public class TransitNodeTreeCreator {
 
 		stopsNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
 				serviceLabels, rawList, Stops.class, null);
-
+		
+		logger.info("Creating [Transfers] relationship");
+		for (RawData rawData : transferList) {
+			Transfers tranfers = (Transfers) rawData;
+			long from = stopsNodesIds.get(tranfers.getFrom_stop_id());
+			long to = stopsNodesIds.get(tranfers.getTo_stop_id());
+			Map<String, Object> attributes = ReflectionData.getInstance().getFieldValue(rawData, Transfers.class);
+			RelationshipDescriber relationship = new RelationshipDescriber(from, to, TransitRelationships.TRANSFER_TO.name(), attributes);
+			BatchInsertionGraphDB.getInstance().createRelationships(relationship);
+		}
+		
+		
 	}
 
 	private void createAgencyNode() throws Exception {
