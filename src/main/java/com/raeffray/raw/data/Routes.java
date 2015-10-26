@@ -1,7 +1,7 @@
 package com.raeffray.raw.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.raeffray.graph.annotations.GraphProperty;
 
 /**
  * This class represents a Bus Route
@@ -15,29 +15,28 @@ public class Routes implements RawData{
 	@JsonProperty("routeId")
 	private String route_id;
 	
-	@JsonIgnore
 	// ids as foreign keys will be ignored
 	private String agency_id;
 
-	@JsonProperty("code")
+	@GraphProperty("code")
 	private String route_short_name;
 	
-	@JsonProperty("longName")
+	@GraphProperty("longName")
 	private String route_long_name;
 	
-	@JsonProperty("description")
+	@GraphProperty("description")
 	private String route_desc;
 	
-	@JsonProperty("type")
+	@GraphProperty("type")
 	private String route_type;
 	
-	@JsonProperty("url")
+	@GraphProperty("url")
 	private String route_url;
 	
-	@JsonIgnore
+	@GraphProperty("routeColor")
 	private String route_color;
 	
-	@JsonIgnore
+	@GraphProperty("routeTextColor")
 	private String route_text_color;
 
 	public String getRoute_id() {
@@ -110,6 +109,10 @@ public class Routes implements RawData{
 
 	public void setRoute_text_color(String route_text_color) {
 		this.route_text_color = route_text_color;
+	}
+
+	public String indentifier() {
+		return this.route_id;
 	}
 	
 	

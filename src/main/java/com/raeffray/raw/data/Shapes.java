@@ -1,22 +1,22 @@
 package com.raeffray.raw.data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.raeffray.graph.annotations.GraphProperty;
 
 public class Shapes implements RawData {
 	
-	@JsonProperty("shapeId")
+	@GraphProperty("shapeId")
 	private String shape_id; 
 	
-	@JsonProperty("latitude")
+	@GraphProperty("latitude")
 	private String shape_pt_lat;
 	
-	@JsonProperty("longitude")
+	@GraphProperty("longitude")
 	private String shape_pt_lon;
 	
-	@JsonProperty("sequence")
+	@GraphProperty("sequence")
 	private String shape_pt_sequence;
 	
-	@JsonProperty("traveldDistance")
+	@GraphProperty("traveldDistance")
 	private String shape_dist_traveled;
 
 	public String getShape_id() {
@@ -57,6 +57,10 @@ public class Shapes implements RawData {
 
 	public void setShape_dist_traveled(String shape_dist_traveled) {
 		this.shape_dist_traveled = shape_dist_traveled;
+	}
+
+	public String indentifier() {
+		return this.shape_id;
 	}
 	
 	

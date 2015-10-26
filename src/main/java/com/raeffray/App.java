@@ -1,8 +1,6 @@
 package com.raeffray;
 
-import java.lang.reflect.InvocationTargetException;
-
-import com.raeffray.graph.handler.RouteNodeHandler;
+import com.raeffray.graph.handler.TransitNodeTreeCreator;
 
 /**
  * Hello world!
@@ -10,12 +8,12 @@ import com.raeffray.graph.handler.RouteNodeHandler;
  */
 public class App 
 {
-    public static void main( String[] args ) throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException
+    public static void main( String[] args ) throws Exception
     {
   
-    	RouteNodeHandler handler = new RouteNodeHandler();
+    	TransitNodeTreeCreator creator = new TransitNodeTreeCreator();
     	
-    	handler.start();
+    	creator.create();
         
     }
 }

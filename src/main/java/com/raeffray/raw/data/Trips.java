@@ -1,32 +1,29 @@
 package com.raeffray.raw.data;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.raeffray.graph.annotations.GraphProperty;
 
 public class Trips implements RawData {
 	
-	@JsonIgnore
 	private String route_id;
 	
-	@JsonIgnore
 	private String service_id;
 	
-	@JsonProperty("tripId")
+	@GraphProperty("tripId")
 	private String trip_id;
 	
-	@JsonProperty("headsign")
+	@GraphProperty("headsign")
 	private String trip_headsign;
 	
-	@JsonProperty("shortName")
+	@GraphProperty("shortName")
 	private String trip_short_name;
 	
-	@JsonProperty("directionId")
+	@GraphProperty("directionId")
 	private String direction_id;
 	
-	@JsonProperty("blockId")
+	@GraphProperty("blockId")
 	private String block_id;
 	
-	@JsonIgnore
+	@GraphProperty("shapeId")
 	private String shape_id;
 
 	public String getRoute_id() {
@@ -91,6 +88,10 @@ public class Trips implements RawData {
 
 	public void setShape_id(String shape_id) {
 		this.shape_id = shape_id;
+	}
+
+	public String indentifier() {
+		return this.trip_id;
 	}
 	
 	

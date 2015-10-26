@@ -1,9 +1,9 @@
 package com.raeffray.reflection;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +12,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.log4j.Logger;
 
+import com.raeffray.graph.annotations.GraphProperty;
 import com.raeffray.raw.data.RawData;
 
 /**
@@ -78,6 +79,28 @@ public class ReflectionData {
 		}
 
 		return list;
+	}
+
+	public Map<String, Object> getFieldValue(RawData data, Class clazz)
+			throws Exception {
+		Map<String, Object> properties = new HashMap<String, Object>();
+		Field[] fields = clazz.getDeclaredFields();
+		Method[] methods = clazz.getMethods();
+		for (int i = 0; i < fields.length; i++) {
+			Field field = fields[i];
+			Method method = getMethod(methods,
+					"get" + WordUtils.capitalize(field.getName()));
+			if (method != null) {
+				GraphProperty annotation = field
+						.getAnnotation(GraphProperty.class);
+				if (annotation != null) {
+					properties.put(annotation.value(),
+							method.invoke(data, null));
+				}
+			}
+
+		}
+		return properties;
 	}
 
 	private Method getMethod(Method[] methods, String methodName) {

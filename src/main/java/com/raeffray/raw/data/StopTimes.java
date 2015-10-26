@@ -1,33 +1,34 @@
 package com.raeffray.raw.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.raeffray.graph.annotations.GraphProperty;
 
-@JsonInclude(Include.NON_NULL)
 public class StopTimes implements RawData {
 
-	@JsonProperty("tripId")
+	@GraphProperty("tripId")
 	private String trip_id;
 	
+	@GraphProperty("arrivalTime")
 	private String arrival_time;
 	
+	@GraphProperty("departureTime")
 	private String departure_time; 
 	
-	@JsonProperty("stopId")
+	@GraphProperty("stopId")
 	private String stop_id;
 	
-	@JsonProperty("sequence")
-	@JsonRawValue
+	@GraphProperty("sequence")
 	private String stop_sequence;
 	
+	@GraphProperty("stopHeadsign")
 	private String stop_headsign; 
 	
+	@GraphProperty("pickupType")
 	private String pickup_type;
 	
+	@GraphProperty("dropoffType")
 	private String drop_off_type;
 	
+	@GraphProperty("shapeDistTraveled")
 	private String shape_dist_traveled;
 
 	public String getTrip_id() {
@@ -100,6 +101,10 @@ public class StopTimes implements RawData {
 
 	public void setShape_dist_traveled(String shape_dist_traveled) {
 		this.shape_dist_traveled = shape_dist_traveled;
+	}
+
+	public String indentifier() {
+		return null;
 	}
 	
 	

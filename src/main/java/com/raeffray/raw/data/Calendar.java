@@ -4,42 +4,38 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.raeffray.graph.annotations.GraphProperty;
 
 public class Calendar implements RawData {
 
-	@JsonProperty("serviceId")
+	@GraphProperty("serviceId")
 	private String service_id;
 	
-	@JsonRawValue
+	@GraphProperty("monday")
 	private String monday;
 	
-	@JsonRawValue
+	@GraphProperty("tuesday")
 	private String tuesday;
 	
-	@JsonRawValue
+	@GraphProperty("wednesday")
 	private String wednesday;
 	
-	@JsonRawValue
+	@GraphProperty("thursday")
 	private String thursday;
 	
-	@JsonRawValue
+	@GraphProperty("friday")
 	private String friday;
 	
-	@JsonRawValue
+	@GraphProperty("saturday")
 	private String saturday;
 	
-	@JsonRawValue
+	@GraphProperty("sunday")
 	private String sunday;
 
-	// @JsonProperty("startDate")
-	@JsonIgnore
+	@GraphProperty("startDate")
 	private String start_date;
 
-	@JsonIgnore
-	@JsonProperty("endDate")
+	@GraphProperty("endDate")
 	private String end_date;
 
 	public String getService_id() {
@@ -137,6 +133,10 @@ public class Calendar implements RawData {
 
 	public void setEnd_date(String end_date) {
 		this.end_date = end_date;
+	}
+
+	public String indentifier() {
+		return this.service_id;
 	}
 
 }

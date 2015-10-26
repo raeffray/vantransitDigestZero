@@ -1,57 +1,55 @@
 package com.raeffray.graph;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
-@JsonInclude(Include.NON_NULL)
 public class RelationshipDescriber {
 
-	public RelationshipDescriber(String type) {
-		super();
-		this.type = type;
-	}
+	private long from;
+
+	private long to;
 
 	private String type;
 
-	private String to;
-	
-	public void setTo(String to) {
+	private Map<String, Object> attributes;
+
+	public RelationshipDescriber(long from, long to, String type,
+			Map<String, Object> attributes) {
+		super();
+		this.from = from;
 		this.to = to;
+		this.type = type;
+		this.attributes = attributes;
 	}
 
-	@JsonProperty("data")
-	private Map<String, Object> attributes;
+	public long getFrom() {
+		return from;
+	}
+
+	public void setFrom(long from) {
+		this.from = from;
+	}
+
+	public long getTo() {
+		return to;
+	}
+
+	public void setTo(long to) {
+		this.to = to;
+	}
 
 	public String getType() {
 		return type;
 	}
 
-	public String getTo() {
-		return to;
+	public void setType(String type) {
+		this.type = type;
 	}
-	
-	public Object getAttribute(String key){
-		return attributes.get(key);
-	}
-
-	public void addAttribute(String key, Object value) {
-		if (attributes == null) {
-			attributes = new HashMap<String, Object>();
-		}
-		attributes.put(key, value);
+	public Map<String, Object> getAttributes() {
+		return attributes;
 	}
 
-	public String parseJson() throws Exception {
-		ObjectWriter ow = new ObjectMapper().writer()
-				.withDefaultPrettyPrinter();
-		return ow.writeValueAsString(this);
+	public void setAttributes(Map<String, Object> attributes) {
+		this.attributes = attributes;
 	}
 
 }

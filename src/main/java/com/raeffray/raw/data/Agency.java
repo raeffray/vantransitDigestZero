@@ -1,25 +1,22 @@
 package com.raeffray.raw.data;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.raeffray.graph.annotations.GraphProperty;
 
-@JsonInclude(Include.NON_NULL)
 public class Agency implements RawData {
 	
-	@JsonProperty("agencyId")
+	@GraphProperty("agencyId")
 	private String agency_id; 
 	
-	@JsonProperty("name")
+	@GraphProperty("name")
 	private String agency_name;
 	
-	@JsonProperty("url")
+	@GraphProperty("url")
 	private String agency_url;
 	
-	@JsonProperty("timeZone")
+	@GraphProperty("timeZone")
 	private String agency_timezone; 
 	
-	@JsonProperty("locale")
+	@GraphProperty("locale")
 	private String agency_lang;
 
 	public String getAgency_id() {
@@ -60,6 +57,10 @@ public class Agency implements RawData {
 
 	public void setAgency_lang(String agency_lang) {
 		this.agency_lang = agency_lang;
+	}
+
+	public String indentifier() {
+		return this.agency_id;
 	}
 	
 	

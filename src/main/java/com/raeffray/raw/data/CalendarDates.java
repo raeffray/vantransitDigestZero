@@ -1,9 +1,16 @@
 package com.raeffray.raw.data;
 
+import com.raeffray.graph.annotations.GraphProperty;
+
 public class CalendarDates implements RawData {
 	
+	@GraphProperty("serviceId")
 	private String service_id;
+	
+	@GraphProperty("date")
 	private String date;
+	
+	@GraphProperty("exceptionType")
 	private String exception_type;
 	
 	public String getService_id() {
@@ -23,6 +30,9 @@ public class CalendarDates implements RawData {
 	}
 	public void setException_type(String exception_type) {
 		this.exception_type = exception_type;
+	}
+	public String indentifier() {
+		return null;
 	}
 	
 	
