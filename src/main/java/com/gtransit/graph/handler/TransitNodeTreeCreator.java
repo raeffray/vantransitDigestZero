@@ -272,11 +272,11 @@ public class TransitNodeTreeCreator {
 
 		List<RelationshipDescriber> relationships = new ArrayList<RelationshipDescriber>();
 
-		Map<String, Object> attributes = new HashMap<String, Object>();
 		List<StopTimes> stopsTimesFromTrip = DbServer.getInstance().getStopTimesByTripId(tripId);
 		for (RawData rawData : stopsTimesFromTrip) {
 			StopTimes stopTime = (StopTimes) rawData;
 			String stopId = stopTime.getStop_id();
+			Map<String, Object> attributes = new HashMap<String, Object>();
 			attributes.put("arrivalTime", stopTime.getArrival_time());
 			attributes.put("departureTime", stopTime.getDeparture_time());
 			attributes.put("dropoffType", stopTime.getDrop_off_type());

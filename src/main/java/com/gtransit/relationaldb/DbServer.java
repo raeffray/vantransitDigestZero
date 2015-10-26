@@ -93,7 +93,7 @@ public class DbServer {
 				pstmt.clearParameters();
 			}
 			pstmt.execute();
-						
+
 		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
@@ -107,7 +107,6 @@ public class DbServer {
 		ps.setString(1, tripId);
 
 		ResultSet rs = ps.executeQuery();
-		rs.next();
 
 		while (rs.next()) {
 			StopTimes stopTime = new StopTimes();
