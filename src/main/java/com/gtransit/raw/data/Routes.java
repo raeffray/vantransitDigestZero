@@ -1,5 +1,11 @@
 package com.gtransit.raw.data;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.gtransit.graph.annotations.GraphProperty;
 
@@ -9,33 +15,42 @@ import com.gtransit.graph.annotations.GraphProperty;
  *  @author Renato Barbosa
  *  
  * */
-
+@Entity
+@Table(name = "Routes", indexes = { @Index(name = "idxRoutes", columnList = "agency_id")})
 public class Routes implements RawData{
 	
+	@Id
 	@JsonProperty("routeId")
 	private String route_id;
 	
-	// ids as foreign keys will be ignored
+	@Column
 	private String agency_id;
 
+	@Column
 	@GraphProperty("code")
 	private String route_short_name;
 	
+	@Column
 	@GraphProperty("longName")
 	private String route_long_name;
 	
+	@Column
 	@GraphProperty("description")
 	private String route_desc;
 	
+	@Column
 	@GraphProperty("type")
 	private String route_type;
 	
+	@Column
 	@GraphProperty("url")
 	private String route_url;
 	
+	@Column
 	@GraphProperty("routeColor")
 	private String route_color;
 	
+	@Column
 	@GraphProperty("routeTextColor")
 	private String route_text_color;
 

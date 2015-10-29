@@ -132,7 +132,7 @@ public class ReflectionDataTest {
 	public void testBuildListStopTines() throws Exception{
 		List<StopTimes> buildList = ReflectionData.getInstance().buildList(StopTimes.class, data3);
 		assertThat(buildList, notNullValue());
-		assertThat(buildList.size(), is(equalTo(1)));
+		assertThat(buildList.size(), is(equalTo(7)));
 		assertThat(buildList.iterator().next().getTrip_id(), is(equalTo("AAAA")));
 	}
 	@Test

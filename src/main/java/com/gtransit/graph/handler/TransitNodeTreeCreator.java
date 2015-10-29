@@ -24,7 +24,7 @@ import com.gtransit.raw.data.Stops;
 import com.gtransit.raw.data.Transfers;
 import com.gtransit.raw.data.Trips;
 import com.gtransit.reflection.ReflectionData;
-import com.gtransit.relationaldb.DbServer;
+import com.gtransit.relationaldb.RelationalDAO;
 
 public class TransitNodeTreeCreator {
 
@@ -35,12 +35,6 @@ public class TransitNodeTreeCreator {
 	private List<Agency> agencyList;
 
 	private List<Transfers> transferList;
-
-	private List<Routes> routeList;
-
-	private List<Trips> tripList;
-
-	// private List<Shapes> shapeList;
 
 	private List<Stops> stopList;
 
@@ -66,24 +60,13 @@ public class TransitNodeTreeCreator {
 			agencyList = ReflectionData.getInstance().buildList(Agency.class,
 					reader.readCSVForData(Agency.class));
 
-			logger.info("Loading [Routes]");
-			routeList = ReflectionData.getInstance().buildList(Routes.class,
-					reader.readCSVForData(Routes.class));
-
-			logger.info("Loading [Trips]");
-			tripList = ReflectionData.getInstance().buildList(Trips.class,
-					reader.readCSVForData(Trips.class));
-			
 			logger.info("Loading [Tranfers]");
-			transferList = ReflectionData.getInstance().buildList(Transfers.class,
-					reader.readCSVForData(Transfers.class));
+			transferList = ReflectionData.getInstance().buildList(
+					Transfers.class, reader.readCSVForData(Transfers.class));
 
 			logger.info("Loading [Stops]");
 			stopList = ReflectionData.getInstance().buildList(Stops.class,
 					reader.readCSVForData(Stops.class));
-
-			logger.info("Loading [StopTimes]");
-			DbServer.getInstance().loadRelationalDB();
 
 			logger.info("Loading [Calendar]");
 			serviceList = ReflectionData.getInstance().buildList(
@@ -94,12 +77,15 @@ public class TransitNodeTreeCreator {
 					CalendarDates.class,
 					reader.readCSVForData(CalendarDates.class));
 
-			// List<Transfers> TransferList = ReflectionData.getInstance()
-			// .buildList(Transfers.class,
-			// reader.readCSVForData(Transfers.class));
+			// loading into HSSQLDB since these are the biggest data set
+			logger.info("Loading [Routes]");
+			RelationalDAO.getInstance().insertData(Routes.class);
 
-			// List<Shapes> shapeList = ReflectionData.getInstance().buildList(
-			// Shapes.class, reader.readCSVForData(Shapes.class));
+			logger.info("Loading [Trips]");
+			RelationalDAO.getInstance().insertData(Trips.class);
+
+			logger.info("Loading [StopTimes]");
+			RelationalDAO.getInstance().insertData(StopTimes.class);
 		}
 	}
 
@@ -123,10 +109,10 @@ public class TransitNodeTreeCreator {
 			logger.error(e);
 		} finally {
 			logger.info("HSQLDB Shutdown.");
-			DbServer.getInstance().serverShutdown();
+			RelationalDAO.getInstance().serverShutdown();
 			logger.info("Graph Stream Shutdown.");
 			BatchInsertionGraphDB.getInstance().shutdown();
-			
+
 		}
 	}
 
@@ -143,18 +129,21 @@ public class TransitNodeTreeCreator {
 
 		stopsNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
 				serviceLabels, rawList, Stops.class, null);
-		
+
 		logger.info("Creating [Transfers] relationship");
 		for (RawData rawData : transferList) {
 			Transfers tranfers = (Transfers) rawData;
 			long from = stopsNodesIds.get(tranfers.getFrom_stop_id());
 			long to = stopsNodesIds.get(tranfers.getTo_stop_id());
-			Map<String, Object> attributes = ReflectionData.getInstance().getFieldValue(rawData, Transfers.class);
-			RelationshipDescriber relationship = new RelationshipDescriber(from, to, TransitRelationships.TRANSFER_TO.name(), attributes);
-			BatchInsertionGraphDB.getInstance().createRelationships(relationship);
+			Map<String, Object> attributes = ReflectionData.getInstance()
+					.getFieldValue(rawData, Transfers.class);
+			RelationshipDescriber relationship = new RelationshipDescriber(
+					from, to, TransitRelationships.TRANSFER_TO.name(),
+					attributes);
+			BatchInsertionGraphDB.getInstance().createRelationships(
+					relationship);
 		}
-		
-		
+
 	}
 
 	private void createAgencyNode() throws Exception {
@@ -178,8 +167,8 @@ public class TransitNodeTreeCreator {
 
 		logger.info("Creating [Route] nodes");
 
-		List<RawData> routesFromAgency = findRouteByAgencyId(routeList,
-				agencyId);
+		List<RawData> routesFromAgency = RelationalDAO.getInstance()
+				.findRoutesByAgencyId(agencyId);
 
 		String[] childLabels = { Configuration.getConfigurationForClass(
 				Routes.class).getString(GRAPH_LABEL_KEY) };
@@ -205,7 +194,8 @@ public class TransitNodeTreeCreator {
 
 		logger.info("Creating [Trips] nodes");
 
-		List<RawData> tripsFromRoute = findTripById(tripList, routeId);
+		List<RawData> tripsFromRoute = RelationalDAO.getInstance()
+				.findTripsByRouteId(routeId);
 
 		String[] childLabels = { Configuration.getConfigurationForClass(
 				Trips.class).getString(GRAPH_LABEL_KEY) };
@@ -289,7 +279,8 @@ public class TransitNodeTreeCreator {
 
 		List<RelationshipDescriber> relationships = new ArrayList<RelationshipDescriber>();
 
-		List<StopTimes> stopsTimesFromTrip = DbServer.getInstance().getStopTimesByTripId(tripId);
+		List<RawData> stopsTimesFromTrip = RelationalDAO.getInstance()
+				.findStopTimesByTripId(tripId);
 		for (RawData rawData : stopsTimesFromTrip) {
 			StopTimes stopTime = (StopTimes) rawData;
 			String stopId = stopTime.getStop_id();
@@ -310,32 +301,6 @@ public class TransitNodeTreeCreator {
 		return relationships;
 	}
 
-	private List<RawData> findTripById(List<Trips> allTrips, String routeId) {
-		List<RawData> foundTrips = new ArrayList<RawData>();
-		for (Iterator<Trips> iterator = allTrips.iterator(); iterator.hasNext();) {
-			Trips trip = iterator.next();
-			if (trip.getRoute_id().equals(routeId)) {
-				foundTrips.add(trip);
-				iterator.remove();
-			}
-		}
-		return foundTrips;
-	}
-
-	private List<RawData> findRouteByAgencyId(List<Routes> allElements,
-			String lookupId) {
-		List<RawData> found = new ArrayList<RawData>();
-		for (Iterator<Routes> iterator = allElements.iterator(); iterator
-				.hasNext();) {
-			Routes element = iterator.next();
-			if (element.getAgency_id().equals(lookupId)) {
-				found.add(element);
-				iterator.remove();
-			}
-		}
-		return found;
-	}
-
 	private List<RawData> findCalendarDateByServiceId(
 			List<CalendarDates> allElements, String lookupId) {
 		List<RawData> found = new ArrayList<RawData>();
@@ -344,20 +309,6 @@ public class TransitNodeTreeCreator {
 			CalendarDates element = iterator.next();
 			if (element.getService_id().equals(lookupId)) {
 				found.add(element);
-			}
-		}
-		return found;
-	}
-
-	private List<RawData> findStopTimesByTripId(List<StopTimes> allElements,
-			String lookupId) {
-		List<RawData> found = new ArrayList<RawData>();
-		for (Iterator<StopTimes> iterator = allElements.iterator(); iterator
-				.hasNext();) {
-			StopTimes element = iterator.next();
-			if (element.getTrip_id().equals(lookupId)) {
-				found.add(element);
-				iterator.remove();
 			}
 		}
 		return found;

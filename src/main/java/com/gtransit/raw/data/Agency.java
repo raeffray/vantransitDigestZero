@@ -3,19 +3,19 @@ package com.gtransit.raw.data;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Agency implements RawData {
-	
+
 	@GraphProperty("agencyId")
-	private String agency_id; 
-	
+	private String agency_id;
+
 	@GraphProperty("name")
 	private String agency_name;
-	
+
 	@GraphProperty("url")
 	private String agency_url;
-	
+
 	@GraphProperty("timeZone")
-	private String agency_timezone; 
-	
+	private String agency_timezone;
+
 	@GraphProperty("locale")
 	private String agency_lang;
 
@@ -62,6 +62,5 @@ public class Agency implements RawData {
 	public String indentifier() {
 		return this.agency_id;
 	}
-	
-	
+
 }

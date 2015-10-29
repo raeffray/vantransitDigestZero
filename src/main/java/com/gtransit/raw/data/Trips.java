@@ -1,31 +1,48 @@
 package com.gtransit.raw.data;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
 import com.gtransit.graph.annotations.GraphProperty;
 
+@Entity
+@Table(name = "Trips", indexes = { @Index(name = "idxTrips", columnList = "trip_id")})
 public class Trips implements RawData {
 	
+	@Column
 	private String route_id;
 	
+	@Column
 	private String service_id;
 	
+	@Column
+	@Id
 	@GraphProperty("tripId")
 	private String trip_id;
 	
+	@Column
 	@GraphProperty("headsign")
 	private String trip_headsign;
 	
+	@Column
 	@GraphProperty("shortName")
 	private String trip_short_name;
 	
+	@Column
 	@GraphProperty("directionId")
 	private String direction_id;
 	
+	@Column
 	@GraphProperty("blockId")
 	private String block_id;
 	
+	@Column
 	@GraphProperty("shapeId")
 	private String shape_id;
-
+	
 	public String getRoute_id() {
 		return route_id;
 	}

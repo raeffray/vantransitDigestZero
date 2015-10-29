@@ -60,7 +60,7 @@ public class CSVReaderTest {
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.iterator().next().get("trip_id"),is(equalTo("AAAA")));
-		assertThat(data.iterator().next().get("shape_dist_traveled"),is(equalTo("IIII")));
+		assertThat(data.iterator().next().get("shape_dist_traveled"),is(equalTo("III1")));
 	}
 	
 	@Test

@@ -1,33 +1,54 @@
 package com.gtransit.raw.data;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
+
 import com.gtransit.graph.annotations.GraphProperty;
 
-public class StopTimes implements RawData {
+@Entity
+@Table(name = "StopTimes", indexes = { @Index(name = "idxStopTimes", columnList = "trip_id")})
+public class StopTimes implements RawData, Serializable {
 
+	@Id
 	@GraphProperty("tripId")
 	private String trip_id;
 	
+	@Column
 	@GraphProperty("arrivalTime")
 	private String arrival_time;
 	
+	@Column
 	@GraphProperty("departureTime")
 	private String departure_time; 
 	
+	@Column
+	@Id
 	@GraphProperty("stopId")
 	private String stop_id;
 	
+	@Column
+	@Id
 	@GraphProperty("sequence")
 	private String stop_sequence;
 	
+	@Column
 	@GraphProperty("stopHeadsign")
 	private String stop_headsign; 
 	
+	@Column
 	@GraphProperty("pickupType")
 	private String pickup_type;
 	
+	@Column
 	@GraphProperty("dropoffType")
 	private String drop_off_type;
 	
+	@Column
 	@GraphProperty("shapeDistTraveled")
 	private String shape_dist_traveled;
 
@@ -106,7 +127,5 @@ public class StopTimes implements RawData {
 	public String indentifier() {
 		return null;
 	}
-	
-	
-	
+
 }
