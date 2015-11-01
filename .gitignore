@@ -3,4 +3,4 @@
 .settings
 **/target
 **/google_transit
-src/main/resources/*.properties
+#src/main/resources/*.properties
