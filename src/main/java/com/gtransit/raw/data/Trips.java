@@ -6,8 +6,13 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import com.gtransit.csv.annotations.CsvIgnore;
 import com.gtransit.graph.annotations.GraphProperty;
 
+/**
+ * @author i842771
+ *
+ */
 @Entity
 @Table(name = "Trips", indexes = { @Index(name = "idxTrips", columnList = "trip_id")})
 public class Trips implements RawData {
@@ -42,6 +47,9 @@ public class Trips implements RawData {
 	@Column
 	@GraphProperty("shapeId")
 	private String shape_id;
+	
+	@CsvIgnore
+	private int daysOfWeekInService;
 	
 	public String getRoute_id() {
 		return route_id;
@@ -110,7 +118,14 @@ public class Trips implements RawData {
 	public String indentifier() {
 		return this.trip_id;
 	}
-	
+
+	public int getDaysOfWeekInService() {
+		return daysOfWeekInService;
+	}
+
+	public void setDaysOfWeekInService(int daysOfWeekInService) {
+		this.daysOfWeekInService = daysOfWeekInService;
+	}
 	
 
 }

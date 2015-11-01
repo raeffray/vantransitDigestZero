@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.neo4j.graphdb.DynamicRelationshipType;
+import org.neo4j.cypher.internal.compiler.v2_2.functions.Str;
 
+import com.gtransit.commons.BeanPopulator;
 import com.gtransit.commons.Configuration;
 import com.gtransit.csv.CSVReader;
 import com.gtransit.graph.RelationshipDescriber;
@@ -19,6 +20,7 @@ import com.gtransit.raw.data.Calendar;
 import com.gtransit.raw.data.CalendarDates;
 import com.gtransit.raw.data.RawData;
 import com.gtransit.raw.data.Routes;
+import com.gtransit.raw.data.Service;
 import com.gtransit.raw.data.StopTimes;
 import com.gtransit.raw.data.Stops;
 import com.gtransit.raw.data.Transfers;
@@ -38,7 +40,9 @@ public class TransitNodeTreeCreator {
 
 	private List<Stops> stopList;
 
-	private List<Calendar> serviceList;
+	private List<Calendar> calendarList;
+
+	private List<Service> serviceList;
 
 	private List<CalendarDates> calendarDateList;
 
@@ -69,7 +73,7 @@ public class TransitNodeTreeCreator {
 					reader.readCSVForData(Stops.class));
 
 			logger.info("Loading [Calendar]");
-			serviceList = ReflectionData.getInstance().buildList(
+			calendarList = ReflectionData.getInstance().buildList(
 					Calendar.class, reader.readCSVForData(Calendar.class));
 
 			logger.info("Loading [CalendarDates]");
@@ -208,18 +212,31 @@ public class TransitNodeTreeCreator {
 						relationShipTravels, Trips.class);
 
 		for (RawData rawData : tripsFromRoute) {
+
 			Trips trip = (Trips) rawData;
+
 			logger.info("Creating stop relatioships to [Trip] tripId ["
 					+ trip.getTrip_id() + "]");
+
 			String tripId = trip.getTrip_id();
 
-			RelationshipDescriber relationShipExecute = new RelationshipDescriber(
-					tripsNodesIds.get(tripId), serviceNodesIds.get(trip
-							.getService_id()),
-					TransitRelationships.EXECUTE.name(), null);
+			int daysInServiceAsInteger = getDaysInServiceAsInteger(trip
+					.getService_id());
 
-			BatchInsertionGraphDB.getInstance().createRelationships(
-					relationShipExecute);
+			trip.setDaysOfWeekInService(daysInServiceAsInteger);
+
+			List<RawData> servicesByServiceId = findServicesByServiceId(
+					serviceList, trip.getService_id());
+
+			for (RawData data : servicesByServiceId) {
+				Service service = (Service) data;
+				RelationshipDescriber relationShipExecute = new RelationshipDescriber(
+						tripsNodesIds.get(tripId), serviceNodesIds.get(String
+								.valueOf(service.getId())),
+						TransitRelationships.EXECUTE.name(), null);
+				BatchInsertionGraphDB.getInstance().createRelationships(
+						relationShipExecute);
+			}
 
 			List<RelationshipDescriber> stopTimesRelationships = createSetStopTimesRelationship(
 					tripId, tripsNodesIds.get(tripId),
@@ -237,17 +254,20 @@ public class TransitNodeTreeCreator {
 		logger.info("Creating [Service] nodes");
 
 		String[] serviceLabels = { Configuration.getConfigurationForClass(
-				Calendar.class).getString(GRAPH_LABEL_KEY) };
+				Service.class).getString(GRAPH_LABEL_KEY) };
+
+		serviceList = BeanPopulator.createServicesForDayInWeek(calendarList);
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
 		rawList.addAll(serviceList);
 
 		serviceNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
-				serviceLabels, rawList, Calendar.class, null);
+				serviceLabels, rawList, Service.class, null);
 
-		for (Calendar service : serviceList) {
-			Long serviceNodeId = serviceNodesIds.get(service.getService_id());
+		for (Service service : serviceList) {
+			Long serviceNodeId = serviceNodesIds.get(String.valueOf(service
+					.getId()));
 			createSetServiceDateNode(service.getService_id(), serviceNodeId);
 		}
 
@@ -312,6 +332,47 @@ public class TransitNodeTreeCreator {
 			}
 		}
 		return found;
+	}
+
+	private Calendar findCalendarByServiceId(String lookupId) {
+		for (Iterator<Calendar> iterator = calendarList.iterator(); iterator
+				.hasNext();) {
+			Calendar element = iterator.next();
+			if (element.getService_id().equals(lookupId)) {
+				return element;
+			}
+		}
+		return null;
+	}
+
+	private List<RawData> findServicesByServiceId(List<Service> allElements,
+			String lookupId) {
+		List<RawData> found = new ArrayList<RawData>();
+		for (Iterator<Service> iterator = allElements.iterator(); iterator
+				.hasNext();) {
+			Service element = iterator.next();
+			if (element.getService_id().equals(lookupId)) {
+				found.add(element);
+			}
+		}
+		return found;
+	}
+
+	private int getDaysInServiceAsInteger(String serviceId) {
+
+		Calendar calendar = findCalendarByServiceId(serviceId);
+
+		StringBuilder builder = new StringBuilder();
+
+		builder.append(calendar.getMonday());
+		builder.append(calendar.getTuesday());
+		builder.append(calendar.getWednesday());
+		builder.append(calendar.getThursday());
+		builder.append(calendar.getFriday());
+		builder.append(calendar.getSaturday());
+		builder.append(calendar.getSunday());
+
+		return Integer.parseInt(builder.toString(), 2);
 	}
 
 }

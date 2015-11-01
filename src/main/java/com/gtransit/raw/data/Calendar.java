@@ -102,33 +102,18 @@ public class Calendar implements RawData {
 		this.sunday = sunday;
 	}
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="PST")
-	public Date getStartDate() {
-		try {
-			SimpleDateFormat dt = new SimpleDateFormat("yyyyMMdd");
-			return dt.parse(this.start_date);	
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	public void setStart_date(String start_date) {
 		this.start_date = start_date;
 	}
+ 
+	
+ 
+	public String getStart_date() {
+		return start_date;
+	}
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="PST")
-	public Date getEndDate() {
-		try {
-			SimpleDateFormat dt = new SimpleDateFormat("yyyyMMdd");
-			return dt.parse(this.end_date);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-		
+	public String getEnd_date() {
+		return end_date;
 	}
 
 	public void setEnd_date(String end_date) {

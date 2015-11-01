@@ -12,6 +12,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.log4j.Logger;
 
+import com.gtransit.csv.annotations.CsvIgnore;
 import com.gtransit.graph.annotations.GraphProperty;
 import com.gtransit.raw.data.RawData;
 
@@ -41,15 +42,21 @@ public class ReflectionData {
 	@SuppressWarnings("rawtypes")
 	public String[] extractFieldsNames(Class<? extends RawData> clazz) {
 
-		List<String> fields = new ArrayList<String>();
+		List<String> fieldsList = new ArrayList<String>();
+
 		Field[] allFields = FieldUtils.getAllFields(clazz);
 
-		String[] fieldsName = new String[allFields.length];
-
 		for (int i = 0; i < allFields.length; i++) {
-			fieldsName[i] = allFields[i].getName();
+			Field field = allFields[i];
+			CsvIgnore annotation = field.getAnnotation(CsvIgnore.class);
+			if (annotation == null) {
+				fieldsList.add(allFields[i].getName());
+			}
 		}
-		return fieldsName;
+
+		String[] fieldsName = new String[fieldsList.size()];
+
+		return fieldsList.toArray(fieldsName);
 	}
 
 	public <T> List<T> buildList(Class<?> clazz,
