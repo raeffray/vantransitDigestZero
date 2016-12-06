@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.csv.annotations.CsvIgnore;
 import com.gtransit.graph.annotations.GraphProperty;
 
@@ -18,35 +19,54 @@ import com.gtransit.graph.annotations.GraphProperty;
 public class Trips implements RawData {
 	
 	@Column
+	@CsvFieldOrdering(position=2)
 	private String route_id;
 	
 	@Column
+	@CsvFieldOrdering(position=7)
 	private String service_id;
 	
 	@Column
 	@Id
 	@GraphProperty("tripId")
+	@CsvFieldOrdering(position=8)
 	private String trip_id;
 	
 	@Column
 	@GraphProperty("headsign")
+	@CsvFieldOrdering(position=5)
 	private String trip_headsign;
 	
 	@Column
 	@GraphProperty("shortName")
+	@CsvFieldOrdering(position=9)
 	private String trip_short_name;
 	
 	@Column
 	@GraphProperty("directionId")
+	@CsvFieldOrdering(position=4)
 	private String direction_id;
 	
 	@Column
 	@GraphProperty("blockId")
+	@CsvFieldOrdering(position=0)
 	private String block_id;
 	
 	@Column
 	@GraphProperty("shapeId")
+	@CsvFieldOrdering(position=6)
 	private String shape_id;
+	
+	@Column
+	@GraphProperty("wheelchairAccessible")
+	@CsvFieldOrdering(position=3)
+	private String wheelchair_accessible;
+	
+	@Column
+	@GraphProperty("bikesAllowed")
+	@CsvFieldOrdering(position=1)
+	private String bikes_allowed;
+	
 	
 	@CsvIgnore
 	private int daysOfWeekInService;
@@ -126,6 +146,22 @@ public class Trips implements RawData {
 	public void setDaysOfWeekInService(int daysOfWeekInService) {
 		this.daysOfWeekInService = daysOfWeekInService;
 	}
-	
 
+	public String getWheelchair_accessible() {
+		return wheelchair_accessible;
+	}
+
+	public void setWheelchair_accessible(String wheelchair_accessible) {
+		this.wheelchair_accessible = wheelchair_accessible;
+	}
+
+	public String getBikes_allowed() {
+		return bikes_allowed;
+	}
+
+	public void setBikes_allowed(String bikes_allowed) {
+		this.bikes_allowed = bikes_allowed;
+	}
+	
+	
 }

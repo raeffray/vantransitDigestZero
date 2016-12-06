@@ -1,37 +1,48 @@
 package com.gtransit.raw.data;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Stops implements RawData {
 
 	@GraphProperty("stopId")
+	@CsvFieldOrdering(position=3)
 	private String stop_id; 
 	
 	@GraphProperty("code")
+	@CsvFieldOrdering(position=1)
 	private String stop_code;
 	
 	@GraphProperty("name")
+	@CsvFieldOrdering(position=7)
 	private String stop_name;
 	
 	@GraphProperty("description")
+	@CsvFieldOrdering(position=6)
 	private String stop_desc;
 	
 	@GraphProperty("latitude")
+	@CsvFieldOrdering(position=0)
 	private String stop_lat;
 	
 	@GraphProperty("longitude")
+	@CsvFieldOrdering(position=2)
 	private String stop_lon;
 	
 	@GraphProperty("agencyId")
+	@CsvFieldOrdering(position=9)
 	private String zone_id;
 	
 	@GraphProperty("url")
+	@CsvFieldOrdering(position=4)
 	private String stop_url;
 	
 	@GraphProperty("type")
+	@CsvFieldOrdering(position=8)
 	private String location_type;
 	
 	@GraphProperty("parentStation")
+	@CsvFieldOrdering(position=5)
 	private String parent_station;
 
 	public String getStop_id() {

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 @Entity
@@ -16,41 +17,55 @@ public class StopTimes implements RawData, Serializable {
 
 	@Id
 	@GraphProperty("tripId")
+	@CsvFieldOrdering(position=0)
 	private String trip_id;
 	
 	@Column
 	@GraphProperty("arrivalTime")
+	@CsvFieldOrdering(position=1)
 	private String arrival_time;
 	
 	@Column
 	@GraphProperty("departureTime")
+	@CsvFieldOrdering(position=2)
 	private String departure_time; 
 	
 	@Column
 	@Id
 	@GraphProperty("stopId")
+	@CsvFieldOrdering(position=3)
 	private String stop_id;
 	
 	@Column
 	@Id
 	@GraphProperty("sequence")
+	@CsvFieldOrdering(position=4)
 	private String stop_sequence;
 	
 	@Column
 	@GraphProperty("stopHeadsign")
+	@CsvFieldOrdering(position=5)
 	private String stop_headsign; 
 	
 	@Column
 	@GraphProperty("pickupType")
+	@CsvFieldOrdering(position=6)
 	private String pickup_type;
 	
 	@Column
 	@GraphProperty("dropoffType")
+	@CsvFieldOrdering(position=7)
 	private String drop_off_type;
 	
 	@Column
 	@GraphProperty("shapeDistTraveled")
+	@CsvFieldOrdering(position=8)
 	private String shape_dist_traveled;
+	
+	@Column
+	@GraphProperty("timepoint")
+	@CsvFieldOrdering(position=9)
+	private String timepoint;
 
 	public String getTrip_id() {
 		return trip_id;
@@ -127,5 +142,14 @@ public class StopTimes implements RawData, Serializable {
 	public String indentifier() {
 		return null;
 	}
+
+	public String getTimepoint() {
+		return timepoint;
+	}
+
+	public void setTimepoint(String timepoint) {
+		this.timepoint = timepoint;
+	}
+	
 
 }

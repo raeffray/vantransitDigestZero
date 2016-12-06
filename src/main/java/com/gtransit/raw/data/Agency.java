@@ -1,22 +1,28 @@
 package com.gtransit.raw.data;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Agency implements RawData {
 
 	@GraphProperty("agencyId")
+	@CsvFieldOrdering(position=3)
 	private String agency_id;
 
 	@GraphProperty("name")
+	@CsvFieldOrdering(position=1)
 	private String agency_name;
 
 	@GraphProperty("url")
+	@CsvFieldOrdering(position=0)
 	private String agency_url;
 
 	@GraphProperty("timeZone")
+	@CsvFieldOrdering(position=2)
 	private String agency_timezone;
 
 	@GraphProperty("locale")
+	@CsvFieldOrdering(position=4)
 	private String agency_lang;
 
 	public String getAgency_id() {

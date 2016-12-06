@@ -4,38 +4,49 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Calendar implements RawData {
 
 	@GraphProperty("serviceId")
+	@CsvFieldOrdering(position=0)
 	private String service_id;
 	
 	@GraphProperty("monday")
+	@CsvFieldOrdering(position=3)
 	private String monday;
 	
 	@GraphProperty("tuesday")
+	@CsvFieldOrdering(position=4)
 	private String tuesday;
 	
 	@GraphProperty("wednesday")
+	@CsvFieldOrdering(position=5)
 	private String wednesday;
 	
 	@GraphProperty("thursday")
+	@CsvFieldOrdering(position=6)
 	private String thursday;
 	
 	@GraphProperty("friday")
+	@CsvFieldOrdering(position=7)
 	private String friday;
 	
 	@GraphProperty("saturday")
+	@CsvFieldOrdering(position=8)
 	private String saturday;
 	
 	@GraphProperty("sunday")
+	@CsvFieldOrdering(position=9)
 	private String sunday;
 
 	@GraphProperty("startDate")
+	@CsvFieldOrdering(position=1)
 	private String start_date;
 
 	@GraphProperty("endDate")
+	@CsvFieldOrdering(position=2)
 	private String end_date;
 
 	public String getService_id() {

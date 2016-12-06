@@ -1,14 +1,14 @@
 package com.gtransit.graph.handler;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.neo4j.cypher.internal.compiler.v2_2.functions.Str;
-
 import com.gtransit.commons.BeanPopulator;
 import com.gtransit.commons.Configuration;
 import com.gtransit.csv.CSVReader;
@@ -34,17 +34,17 @@ public class TransitNodeTreeCreator {
 
 	private static final String GRAPH_LABEL_KEY = "graph.label";
 
-	private List<Agency> agencyList;
+	private Collection<Agency> agencyList;
 
-	private List<Transfers> transferList;
+	private Collection<Transfers> transferList;
 
-	private List<Stops> stopList;
+	private Collection<Stops> stopList;
 
-	private List<Calendar> calendarList;
+	private Collection<Calendar> calendarList;
 
-	private List<Service> serviceList;
+	private Collection<Service> serviceList;
 
-	private List<CalendarDates> calendarDateList;
+	private Collection<CalendarDates> calendarDateList;
 
 	Map<String, Long> serviceNodesIds;
 
@@ -53,45 +53,6 @@ public class TransitNodeTreeCreator {
 	Map<String, Long> serviceDatesNodesIds;
 
 	Map<String, Long> stopsNodesIds;
-
-	public void loadCSVs() throws Exception {
-
-		CSVReader reader = new CSVReader();
-
-		if (agencyList == null) {
-
-			logger.info("Loading [Agency]");
-			agencyList = ReflectionData.getInstance().buildList(Agency.class,
-					reader.readCSVForData(Agency.class));
-
-			logger.info("Loading [Tranfers]");
-			transferList = ReflectionData.getInstance().buildList(
-					Transfers.class, reader.readCSVForData(Transfers.class));
-
-			logger.info("Loading [Stops]");
-			stopList = ReflectionData.getInstance().buildList(Stops.class,
-					reader.readCSVForData(Stops.class));
-
-			logger.info("Loading [Calendar]");
-			calendarList = ReflectionData.getInstance().buildList(
-					Calendar.class, reader.readCSVForData(Calendar.class));
-
-			logger.info("Loading [CalendarDates]");
-			calendarDateList = ReflectionData.getInstance().buildList(
-					CalendarDates.class,
-					reader.readCSVForData(CalendarDates.class));
-
-			// loading into HSSQLDB since these are the biggest data set
-			logger.info("Loading [Routes]");
-			RelationalDAO.getInstance().insertData(Routes.class);
-
-			logger.info("Loading [Trips]");
-			RelationalDAO.getInstance().insertData(Trips.class);
-
-			logger.info("Loading [StopTimes]");
-			RelationalDAO.getInstance().insertData(StopTimes.class);
-		}
-	}
 
 	public void create() throws Exception {
 		try {
@@ -120,32 +81,64 @@ public class TransitNodeTreeCreator {
 		}
 	}
 
+	public void loadCSVs() throws Exception {
+
+		CSVReader reader = new CSVReader();
+
+		if (agencyList == null) {
+
+			logger.info("Loading [Agency]");
+			agencyList = ReflectionData.getInstance().buildList(Agency.class, reader.readCSVForData(Agency.class));
+
+			logger.info("Loading [Tranfers]");
+			// transferList = ReflectionData.getInstance().buildList(
+			// Transfers.class, reader.readCSVForData(Transfers.class));
+			transferList = new ArrayList<Transfers>();
+
+			logger.info("Loading [Stops]");
+			stopList = ReflectionData.getInstance().buildList(Stops.class, reader.readCSVForData(Stops.class));
+
+			logger.info("Loading [Calendar]");
+			calendarList = ReflectionData.getInstance().buildList(Calendar.class,
+					reader.readCSVForData(Calendar.class));
+
+			logger.info("Loading [CalendarDates]");
+			calendarDateList = ReflectionData.getInstance().buildList(CalendarDates.class,
+					reader.readCSVForData(CalendarDates.class));
+
+			// loading into HSSQLDB since these are the biggest data set
+			logger.info("Loading [Routes]");
+			RelationalDAO.getInstance().insertData(Routes.class);
+
+			logger.info("Loading [Trips]");
+			RelationalDAO.getInstance().insertData(Trips.class);
+
+			logger.info("Loading [StopTimes]");
+			RelationalDAO.getInstance().insertData(StopTimes.class);
+		}
+	}
+
 	private void createBusStopsNode() throws Exception {
 
 		logger.info("Creating [Stops] node");
 
-		String[] serviceLabels = { Configuration.getConfigurationForClass(
-				Stops.class).getString(GRAPH_LABEL_KEY) };
+		String[] serviceLabels = { Configuration.getConfigurationForClass(Stops.class).getString(GRAPH_LABEL_KEY) };
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
 		rawList.addAll(stopList);
 
-		stopsNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
-				serviceLabels, rawList, Stops.class, null);
+		stopsNodesIds = BatchInsertionGraphDB.getInstance().createNodes(serviceLabels, rawList, Stops.class, null);
 
 		logger.info("Creating [Transfers] relationship");
 		for (RawData rawData : transferList) {
 			Transfers tranfers = (Transfers) rawData;
 			long from = stopsNodesIds.get(tranfers.getFrom_stop_id());
 			long to = stopsNodesIds.get(tranfers.getTo_stop_id());
-			Map<String, Object> attributes = ReflectionData.getInstance()
-					.getFieldValue(rawData, Transfers.class);
-			RelationshipDescriber relationship = new RelationshipDescriber(
-					from, to, TransitRelationships.TRANSFER_TO.name(),
-					attributes);
-			BatchInsertionGraphDB.getInstance().createRelationships(
-					relationship);
+			Map<String, Object> attributes = ReflectionData.getInstance().getFieldValue(rawData, Transfers.class);
+			RelationshipDescriber relationship = new RelationshipDescriber(from, to,
+					TransitRelationships.TRANSFER_TO.name(), attributes);
+			BatchInsertionGraphDB.getInstance().createRelationships(relationship);
 		}
 
 	}
@@ -154,97 +147,79 @@ public class TransitNodeTreeCreator {
 
 		logger.info("Creating [Agency] node");
 
-		String[] serviceLabels = { Configuration.getConfigurationForClass(
-				Agency.class).getString(GRAPH_LABEL_KEY) };
+		String[] serviceLabels = { Configuration.getConfigurationForClass(Agency.class).getString(GRAPH_LABEL_KEY) };
 
 		List<RawData> rawList = new ArrayList<RawData>();
 
 		rawList.addAll(agencyList);
 
-		agencyNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
-				serviceLabels, rawList, Agency.class, null);
+		agencyNodesIds = BatchInsertionGraphDB.getInstance().createNodes(serviceLabels, rawList, Agency.class, null);
 
 	}
 
-	private void createSetRouteNode(String agencyId, long agencyNodeId)
-			throws Exception {
+	private void createSetRouteNode(String agencyId, long agencyNodeId) throws Exception {
 
 		logger.info("Creating [Route] nodes");
 
-		List<RawData> routesFromAgency = RelationalDAO.getInstance()
-				.findRoutesByAgencyId(agencyId);
+		List<RawData> routesFromAgency = RelationalDAO.getInstance().findRoutesByAgencyId(agencyId);
 
-		String[] childLabels = { Configuration.getConfigurationForClass(
-				Routes.class).getString(GRAPH_LABEL_KEY) };
+		String[] childLabels = { Configuration.getConfigurationForClass(Routes.class).getString(GRAPH_LABEL_KEY) };
 
-		RelationshipDescriber relationship = new RelationshipDescriber(
-				agencyNodeId, -1, TransitRelationships.OPERATES.name(), null);
+		RelationshipDescriber relationship = new RelationshipDescriber(agencyNodeId, -1,
+				TransitRelationships.OPERATES.name(), null);
 
-		Map<String, Long> routeNodesIds = BatchInsertionGraphDB.getInstance()
-				.createNodeStructure(routesFromAgency, childLabels,
-						relationship, Routes.class);
+		Map<String, Long> routeNodesIds = BatchInsertionGraphDB.getInstance().createNodeStructure(routesFromAgency,
+				childLabels, relationship, Routes.class);
 
 		for (RawData rawRoute : routesFromAgency) {
 			Routes route = (Routes) rawRoute;
-			logger.info("Creating [Route] code [" + route.getRoute_short_name()
-					+ "]  node");
+			logger.info("Creating [Route] code [" + route.getRoute_short_name() + "]  node");
 			Long routeFather = routeNodesIds.get(route.getRoute_id());
 			createSetTripNode(route.getRoute_id(), routeFather);
 		}
 	}
 
-	private void createSetTripNode(String routeId, long routeNodeId)
-			throws Exception {
+	private void createSetTripNode(String routeId, long routeNodeId) throws Exception {
 
 		logger.info("Creating [Trips] nodes");
 
-		List<RawData> tripsFromRoute = RelationalDAO.getInstance()
-				.findTripsByRouteId(routeId);
+		List<RawData> tripsFromRoute = RelationalDAO.getInstance().findTripsByRouteId(routeId);
 
-		String[] childLabels = { Configuration.getConfigurationForClass(
-				Trips.class).getString(GRAPH_LABEL_KEY) };
+		String[] childLabels = { Configuration.getConfigurationForClass(Trips.class).getString(GRAPH_LABEL_KEY) };
 
-		RelationshipDescriber relationShipTravels = new RelationshipDescriber(
-				routeNodeId, -1, TransitRelationships.TRAVELS.name(), null);
+		RelationshipDescriber relationShipTravels = new RelationshipDescriber(routeNodeId, -1,
+				TransitRelationships.TRAVELS.name(), null);
 
-		Map<String, Long> tripsNodesIds = BatchInsertionGraphDB.getInstance()
-				.createNodeStructure(tripsFromRoute, childLabels,
-						relationShipTravels, Trips.class);
+		Map<String, Long> tripsNodesIds = BatchInsertionGraphDB.getInstance().createNodeStructure(tripsFromRoute,
+				childLabels, relationShipTravels, Trips.class);
 
 		for (RawData rawData : tripsFromRoute) {
 
 			Trips trip = (Trips) rawData;
 
-			logger.info("Creating stop relatioships to [Trip] tripId ["
-					+ trip.getTrip_id() + "]");
+			logger.info("Creating stop relatioships to [Trip] tripId [" + trip.getTrip_id() + "]");
 
 			String tripId = trip.getTrip_id();
 
-			int daysInServiceAsInteger = getDaysInServiceAsInteger(trip
-					.getService_id());
+			int daysInServiceAsInteger = getDaysInServiceAsInteger(trip.getService_id());
 
 			trip.setDaysOfWeekInService(daysInServiceAsInteger);
 
-			List<RawData> servicesByServiceId = findServicesByServiceId(
-					serviceList, trip.getService_id());
+			Collection<RawData> servicesByServiceId = findServicesByServiceId(serviceList, trip.getService_id());
 
 			for (RawData data : servicesByServiceId) {
 				Service service = (Service) data;
-				RelationshipDescriber relationShipExecute = new RelationshipDescriber(
-						tripsNodesIds.get(tripId), serviceNodesIds.get(String
-								.valueOf(service.getId())),
-						TransitRelationships.EXECUTE.name(), null);
-				BatchInsertionGraphDB.getInstance().createRelationships(
-						relationShipExecute);
+				RelationshipDescriber relationShipExecute = new RelationshipDescriber(tripsNodesIds.get(tripId),
+						serviceNodesIds.get(String.valueOf(service.getId())), TransitRelationships.EXECUTE.name(),
+						null);
+				BatchInsertionGraphDB.getInstance().createRelationships(relationShipExecute);
 			}
 
-			List<RelationshipDescriber> stopTimesRelationships = createSetStopTimesRelationship(
-					tripId, tripsNodesIds.get(tripId),
-					TransitRelationships.PICKUP_AT.name());
+			List<RelationshipDescriber> stopTimesRelationships = createSetStopTimesRelationship(tripId,
+					tripsNodesIds.get(tripId), TransitRelationships.PICKUP_AT.name());
 
 			for (RelationshipDescriber relationshipDesc : stopTimesRelationships) {
-				BatchInsertionGraphDB.getInstance().createRelationships(
-						relationshipDesc);
+				BatchInsertionGraphDB.getInstance().createRelationships(relationshipDesc);
 			}
 		}
 	}
@@ -253,8 +228,7 @@ public class TransitNodeTreeCreator {
 
 		logger.info("Creating [Service] nodes");
 
-		String[] serviceLabels = { Configuration.getConfigurationForClass(
-				Service.class).getString(GRAPH_LABEL_KEY) };
+		String[] serviceLabels = { Configuration.getConfigurationForClass(Service.class).getString(GRAPH_LABEL_KEY) };
 
 		serviceList = BeanPopulator.createServicesForDayInWeek(calendarList);
 
@@ -262,45 +236,38 @@ public class TransitNodeTreeCreator {
 
 		rawList.addAll(serviceList);
 
-		serviceNodesIds = BatchInsertionGraphDB.getInstance().createNodes(
-				serviceLabels, rawList, Service.class, null);
+		serviceNodesIds = BatchInsertionGraphDB.getInstance().createNodes(serviceLabels, rawList, Service.class, null);
 
 		for (Service service : serviceList) {
-			Long serviceNodeId = serviceNodesIds.get(String.valueOf(service
-					.getId()));
+			Long serviceNodeId = serviceNodesIds.get(String.valueOf(service.getId()));
 			createSetServiceDateNode(service.getService_id(), serviceNodeId);
 		}
 
 	}
 
-	private void createSetServiceDateNode(String serviceId, long serviceNodeId)
-			throws Exception {
+	private void createSetServiceDateNode(String serviceId, long serviceNodeId) throws Exception {
 
-		List<RawData> calendarDatesFromTrip = findCalendarDateByServiceId(
-				calendarDateList, serviceId);
+		Collection<RawData> calendarDatesFromTrip = findCalendarDateByServiceId(calendarDateList, serviceId);
 
-		String[] childLabels = { Configuration.getConfigurationForClass(
-				CalendarDates.class).getString(GRAPH_LABEL_KEY) };
+		String[] childLabels = {
+				Configuration.getConfigurationForClass(CalendarDates.class).getString(GRAPH_LABEL_KEY) };
 
-		RelationshipDescriber relationship = new RelationshipDescriber(
-				serviceNodeId, -1,
+		RelationshipDescriber relationship = new RelationshipDescriber(serviceNodeId, -1,
 				TransitRelationships.SERVICE_DATE_RESTRICED_IN.name(), null);
 
-		BatchInsertionGraphDB.getInstance().createNodeStructure(
-				calendarDatesFromTrip, childLabels, relationship,
+		BatchInsertionGraphDB.getInstance().createNodeStructure(calendarDatesFromTrip, childLabels, relationship,
 				CalendarDates.class);
 
 	}
 
-	private List<RelationshipDescriber> createSetStopTimesRelationship(
-			String tripId, long tripNodeId, String type) throws Exception {
+	private List<RelationshipDescriber> createSetStopTimesRelationship(String tripId, long tripNodeId, String type)
+			throws Exception {
 
 		logger.debug("Creating [StopTimes] relationships");
 
 		List<RelationshipDescriber> relationships = new ArrayList<RelationshipDescriber>();
 
-		List<RawData> stopsTimesFromTrip = RelationalDAO.getInstance()
-				.findStopTimesByTripId(tripId);
+		List<RawData> stopsTimesFromTrip = RelationalDAO.getInstance().findStopTimesByTripId(tripId);
 		for (RawData rawData : stopsTimesFromTrip) {
 			StopTimes stopTime = (StopTimes) rawData;
 			String stopId = stopTime.getStop_id();
@@ -313,19 +280,17 @@ public class TransitNodeTreeCreator {
 			attributes.put("headsign", stopTime.getStop_headsign());
 			attributes.put("sequence", stopTime.getStop_sequence());
 			attributes.put("stopNodeId", stopsNodesIds.get(stopId));
-			RelationshipDescriber relationship = new RelationshipDescriber(
-					tripNodeId, stopsNodesIds.get(stopId), type, attributes);
+			RelationshipDescriber relationship = new RelationshipDescriber(tripNodeId, stopsNodesIds.get(stopId), type,
+					attributes);
 			relationships.add(relationship);
 		}
 
 		return relationships;
 	}
 
-	private List<RawData> findCalendarDateByServiceId(
-			List<CalendarDates> allElements, String lookupId) {
-		List<RawData> found = new ArrayList<RawData>();
-		for (Iterator<CalendarDates> iterator = allElements.iterator(); iterator
-				.hasNext();) {
+	private Collection<RawData> findCalendarDateByServiceId(Collection<CalendarDates> allElements, String lookupId) {
+		Collection<RawData> found = new HashSet<RawData>();
+		for (Iterator<CalendarDates> iterator = allElements.iterator(); iterator.hasNext();) {
 			CalendarDates element = iterator.next();
 			if (element.getService_id().equals(lookupId)) {
 				found.add(element);
@@ -335,8 +300,7 @@ public class TransitNodeTreeCreator {
 	}
 
 	private Calendar findCalendarByServiceId(String lookupId) {
-		for (Iterator<Calendar> iterator = calendarList.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<Calendar> iterator = calendarList.iterator(); iterator.hasNext();) {
 			Calendar element = iterator.next();
 			if (element.getService_id().equals(lookupId)) {
 				return element;
@@ -345,11 +309,9 @@ public class TransitNodeTreeCreator {
 		return null;
 	}
 
-	private List<RawData> findServicesByServiceId(List<Service> allElements,
-			String lookupId) {
+	private Collection<RawData> findServicesByServiceId(Collection<Service> allElements, String lookupId) {
 		List<RawData> found = new ArrayList<RawData>();
-		for (Iterator<Service> iterator = allElements.iterator(); iterator
-				.hasNext();) {
+		for (Iterator<Service> iterator = allElements.iterator(); iterator.hasNext();) {
 			Service element = iterator.next();
 			if (element.getService_id().equals(lookupId)) {
 				found.add(element);
