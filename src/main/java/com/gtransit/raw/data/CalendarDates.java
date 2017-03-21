@@ -1,16 +1,20 @@
 package com.gtransit.raw.data;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class CalendarDates implements RawData {
 	
 	@GraphProperty("serviceId")
+	@CsvFieldOrdering(position=0)
 	private String service_id;
 	
 	@GraphProperty("date")
+	@CsvFieldOrdering(position=1)
 	private String date;
 	
 	@GraphProperty("exceptionType")
+	@CsvFieldOrdering(position=2)
 	private String exception_type;
 	
 	public String getService_id() {

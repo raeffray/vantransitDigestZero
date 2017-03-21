@@ -1,7 +1,9 @@
 package com.gtransit.graph.inserter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +29,13 @@ public class BatchInsertionGraphDB {
 	static Logger logger = Logger.getLogger(BatchInsertionGraphDB.class);
 
 	private BatchInsertionGraphDB() {
-		inserter = BatchInserters.inserter(new File("target/graph-db")
-				.getAbsolutePath());
+		
+		try {
+			inserter = BatchInserters.inserter(new File("target/graph-db"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static BatchInsertionGraphDB getInstance() {
@@ -44,7 +51,7 @@ public class BatchInsertionGraphDB {
 	}
 
 	public Map<String, Long> createNodes(String[] labels,
-			List<RawData> rawDataList, Class clazz,
+			Collection<RawData> rawDataList, Class clazz,
 			RelationshipDescriber relationship) throws Exception {
 
 		List<Label> labelList = new ArrayList<Label>();
@@ -86,7 +93,7 @@ public class BatchInsertionGraphDB {
 				relationship.getTo(), type, relationship.getAttributes());
 	}
 
-	public Map<String, Long> createNodeStructure(List<RawData> childNodes,
+	public Map<String, Long> createNodeStructure(Collection<RawData> childNodes,
 			String[] childLabels, RelationshipDescriber relationship,
 			Class clazz) throws Exception {
 

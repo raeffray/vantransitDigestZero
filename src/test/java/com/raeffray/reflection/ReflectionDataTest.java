@@ -62,7 +62,7 @@ public class ReflectionDataTest {
 	public void testExtractFieldsNamesTrips(){
 		String[] fieldsNames = ReflectionData.getInstance().extractFieldsNames(Trips.class);
 		assertThat(fieldsNames, notNullValue());
-		assertThat(fieldsNames.length, is(equalTo(8)));
+		assertThat(fieldsNames.length, is(equalTo(10)));
 	}
 
 	@Test

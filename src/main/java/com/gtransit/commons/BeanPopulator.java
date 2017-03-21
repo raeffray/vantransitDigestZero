@@ -1,6 +1,7 @@
 package com.gtransit.commons;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.gtransit.raw.data.Calendar;
@@ -8,8 +9,8 @@ import com.gtransit.raw.data.Service;
 
 public class BeanPopulator {
 
-	public static List<Service> createServicesForDayInWeek(
-			List<Calendar> calendarList) {
+	public static Collection<Service> createServicesForDayInWeek(
+			Collection<Calendar> calendarList) {
 
 		List<Service> services = new ArrayList<Service>();
 

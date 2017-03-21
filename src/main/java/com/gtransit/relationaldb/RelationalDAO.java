@@ -1,6 +1,7 @@
 package com.gtransit.relationaldb;
 
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -48,7 +49,7 @@ public class RelationalDAO {
 	public void insertData(Class<? extends RawData> clazz) throws Exception {
 		Session session = HibernateWrapper.getSessionFactory().openSession();
 		session.beginTransaction();
-		List<RawData> list = ReflectionData.getInstance().buildList(clazz,
+		Collection<RawData> list = ReflectionData.getInstance().buildList(clazz,
 				reader.readCSVForData(clazz));
 
 		for (RawData rawData : list) {
