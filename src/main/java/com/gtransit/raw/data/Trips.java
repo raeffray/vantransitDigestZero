@@ -19,52 +19,52 @@ import com.gtransit.graph.annotations.GraphProperty;
 public class Trips implements RawData {
 	
 	@Column
-	@CsvFieldOrdering(position=2)
+	@CsvFieldOrdering(position=0)
 	private String route_id;
 	
 	@Column
-	@CsvFieldOrdering(position=7)
+	@CsvFieldOrdering(position=1)
 	private String service_id;
 	
 	@Column
 	@Id
 	@GraphProperty("tripId")
-	@CsvFieldOrdering(position=8)
+	@CsvFieldOrdering(position=2)
 	private String trip_id;
 	
 	@Column
 	@GraphProperty("headsign")
-	@CsvFieldOrdering(position=5)
+	@CsvFieldOrdering(position=3)
 	private String trip_headsign;
 	
 	@Column
 	@GraphProperty("shortName")
-	@CsvFieldOrdering(position=9)
+	@CsvFieldOrdering(position=4)
 	private String trip_short_name;
 	
 	@Column
 	@GraphProperty("directionId")
-	@CsvFieldOrdering(position=4)
+	@CsvFieldOrdering(position=5)
 	private String direction_id;
 	
 	@Column
 	@GraphProperty("blockId")
-	@CsvFieldOrdering(position=0)
+	@CsvFieldOrdering(position=6)
 	private String block_id;
 	
 	@Column
 	@GraphProperty("shapeId")
-	@CsvFieldOrdering(position=6)
+	@CsvFieldOrdering(position=7)
 	private String shape_id;
 	
 	@Column
 	@GraphProperty("wheelchairAccessible")
-	@CsvFieldOrdering(position=3)
+	@CsvFieldOrdering(position=8)
 	private String wheelchair_accessible;
 	
 	@Column
 	@GraphProperty("bikesAllowed")
-	@CsvFieldOrdering(position=1)
+	@CsvFieldOrdering(position=9)
 	private String bikes_allowed;
 	
 	

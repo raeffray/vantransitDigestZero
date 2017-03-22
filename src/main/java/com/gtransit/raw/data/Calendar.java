@@ -14,39 +14,39 @@ public class Calendar implements RawData {
 	private String service_id;
 	
 	@GraphProperty("monday")
-	@CsvFieldOrdering(position=3)
+	@CsvFieldOrdering(position=1)
 	private String monday;
 	
 	@GraphProperty("tuesday")
-	@CsvFieldOrdering(position=4)
+	@CsvFieldOrdering(position=2)
 	private String tuesday;
 	
 	@GraphProperty("wednesday")
-	@CsvFieldOrdering(position=5)
+	@CsvFieldOrdering(position=3)
 	private String wednesday;
 	
 	@GraphProperty("thursday")
-	@CsvFieldOrdering(position=6)
+	@CsvFieldOrdering(position=4)
 	private String thursday;
 	
 	@GraphProperty("friday")
-	@CsvFieldOrdering(position=7)
+	@CsvFieldOrdering(position=5)
 	private String friday;
 	
 	@GraphProperty("saturday")
-	@CsvFieldOrdering(position=8)
+	@CsvFieldOrdering(position=6)
 	private String saturday;
 	
 	@GraphProperty("sunday")
-	@CsvFieldOrdering(position=9)
+	@CsvFieldOrdering(position=7)
 	private String sunday;
 
 	@GraphProperty("startDate")
-	@CsvFieldOrdering(position=1)
+	@CsvFieldOrdering(position=8)
 	private String start_date;
 
 	@GraphProperty("endDate")
-	@CsvFieldOrdering(position=2)
+	@CsvFieldOrdering(position=9)
 	private String end_date;
 
 	public String getService_id() {

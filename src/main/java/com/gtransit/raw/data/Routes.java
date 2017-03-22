@@ -22,31 +22,31 @@ public class Routes implements RawData{
 	
 	@Id
 	@JsonProperty("routeId")
-	@CsvFieldOrdering(position=5)
+	@CsvFieldOrdering(position=0)
 	private String route_id;
 	
 	@Column
-	@CsvFieldOrdering(position=4)
+	@CsvFieldOrdering(position=1)
 	private String agency_id;
 
 	@Column
 	@GraphProperty("code")
-	@CsvFieldOrdering(position=9)
+	@CsvFieldOrdering(position=2)
 	private String route_short_name;
 	
 	@Column
 	@GraphProperty("longName")
-	@CsvFieldOrdering(position=0)
+	@CsvFieldOrdering(position=3)
 	private String route_long_name;
 	
 	@Column
 	@GraphProperty("description")
-	@CsvFieldOrdering(position=7)
+	@CsvFieldOrdering(position=4)
 	private String route_desc;
 	
 	@Column
 	@GraphProperty("type")
-	@CsvFieldOrdering(position=1)
+	@CsvFieldOrdering(position=5)
 	private String route_type;
 	
 	@Column
@@ -56,12 +56,12 @@ public class Routes implements RawData{
 	
 	@Column
 	@GraphProperty("routeColor")
-	@CsvFieldOrdering(position=3)
+	@CsvFieldOrdering(position=7)
 	private String route_color;
 	
 	@Column
 	@GraphProperty("routeTextColor")
-	@CsvFieldOrdering(position=2)
+	@CsvFieldOrdering(position=8)
 	private String route_text_color;
 
 	public String getRoute_id() {

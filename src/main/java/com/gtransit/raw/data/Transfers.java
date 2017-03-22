@@ -1,19 +1,24 @@
 package com.gtransit.raw.data;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Transfers implements RawData {
 
 	@GraphProperty("from")
+	@CsvFieldOrdering(position=0)
 	private String from_stop_id;
 
 	@GraphProperty("to")
+	@CsvFieldOrdering(position=1)
 	private String to_stop_id;
 
 	@GraphProperty("type")
+	@CsvFieldOrdering(position=2)
 	private String transfer_type;
 
 	@GraphProperty("minTransferTime")
+	@CsvFieldOrdering(position=3)
 	private String min_transfer_time;
 
 	public String getFrom_stop_id() {

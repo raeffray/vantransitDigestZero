@@ -6,7 +6,7 @@ import com.gtransit.graph.annotations.GraphProperty;
 public class Agency implements RawData {
 
 	@GraphProperty("agencyId")
-	@CsvFieldOrdering(position=3)
+	@CsvFieldOrdering(position=0)
 	private String agency_id;
 
 	@GraphProperty("name")
@@ -14,11 +14,11 @@ public class Agency implements RawData {
 	private String agency_name;
 
 	@GraphProperty("url")
-	@CsvFieldOrdering(position=0)
+	@CsvFieldOrdering(position=2)
 	private String agency_url;
 
 	@GraphProperty("timeZone")
-	@CsvFieldOrdering(position=2)
+	@CsvFieldOrdering(position=3)
 	private String agency_timezone;
 
 	@GraphProperty("locale")

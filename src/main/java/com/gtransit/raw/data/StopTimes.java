@@ -62,10 +62,10 @@ public class StopTimes implements RawData, Serializable {
 	@CsvFieldOrdering(position=8)
 	private String shape_dist_traveled;
 	
-	@Column
-	@GraphProperty("timepoint")
-	@CsvFieldOrdering(position=9)
-	private String timepoint;
+	//@Column
+	//@GraphProperty("timepoint")
+	//@CsvFieldOrdering(position=9)
+	//private String timepoint;
 
 	public String getTrip_id() {
 		return trip_id;
@@ -143,13 +143,13 @@ public class StopTimes implements RawData, Serializable {
 		return null;
 	}
 
-	public String getTimepoint() {
-		return timepoint;
-	}
-
-	public void setTimepoint(String timepoint) {
-		this.timepoint = timepoint;
-	}
+//	public String getTimepoint() {
+//		return timepoint;
+//	}
+//
+//	public void setTimepoint(String timepoint) {
+//		this.timepoint = timepoint;
+//	}
 	
 
 }

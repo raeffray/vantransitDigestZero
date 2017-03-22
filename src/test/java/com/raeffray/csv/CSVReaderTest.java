@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class CSVReaderTest {
 	
 	@Test
 	public void testRoutes() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Routes.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Routes.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -45,7 +46,7 @@ public class CSVReaderTest {
 	
 	@Test
 	public void testTrips() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Trips.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Trips.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -55,7 +56,7 @@ public class CSVReaderTest {
 
 	@Test
 	public void testTimes() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(StopTimes.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(StopTimes.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -65,7 +66,7 @@ public class CSVReaderTest {
 	
 	@Test
 	public void testShapes() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Shapes.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Shapes.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -75,7 +76,7 @@ public class CSVReaderTest {
 	
 	@Test
 	public void testAgency() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Agency.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Agency.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -85,7 +86,7 @@ public class CSVReaderTest {
 	
 	@Test
 	public void testStops() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Stops.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Stops.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -94,7 +95,7 @@ public class CSVReaderTest {
 	}
 	@Test
 	public void testCalendar() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Calendar.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Calendar.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -103,7 +104,7 @@ public class CSVReaderTest {
 	}
 	@Test
 	public void testCalendarDates() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(CalendarDates.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(CalendarDates.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));
@@ -112,7 +113,7 @@ public class CSVReaderTest {
 	}
 	@Test
 	public void testCalendarTransfers() throws Exception{
-		List<Map<String, String>> data = csvReader.readCSVForData(Transfers.class);
+		Collection<Map<String, String>> data = csvReader.readCSVForData(Transfers.class);
 		assertThat(data, notNullValue());
 		assertThat(data.size(),greaterThan(0));
 		assertThat(data.size(),greaterThan(0));

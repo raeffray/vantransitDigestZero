@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -27,15 +28,15 @@ public class ReflectionDataTest {
 	
 	private CSVReader csvReader;
 	
-	private List<Map<String, String>> data1=null;
-	private List<Map<String, String>> data2=null;
-	private List<Map<String, String>> data3=null;
-	private List<Map<String, String>> data4=null;
-	private List<Map<String, String>> data5=null;
-	private List<Map<String, String>> data6=null;
-	private List<Map<String, String>> data7=null;
-	private List<Map<String, String>> data8=null;
-	private List<Map<String, String>> data9=null;
+	private Collection<Map<String, String>> data1=null;
+	private Collection<Map<String, String>> data2=null;
+	private Collection<Map<String, String>> data3=null;
+	private Collection<Map<String, String>> data4=null;
+	private Collection<Map<String, String>> data5=null;
+	private Collection<Map<String, String>> data6=null;
+	private Collection<Map<String, String>> data7=null;
+	private Collection<Map<String, String>> data8=null;
+	private Collection<Map<String, String>> data9=null;
 	
 	@Before
 	public void prepare() throws Exception{
@@ -114,7 +115,7 @@ public class ReflectionDataTest {
 	
 	@Test
 	public void testBuildListRoutes() throws Exception{
-		List<Routes> buildList = ReflectionData.getInstance().buildList(Routes.class, data1);
+		Collection<Routes> buildList = ReflectionData.getInstance().buildList(Routes.class, data1);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getRoute_id(), is(equalTo("AAAA")));
@@ -122,7 +123,7 @@ public class ReflectionDataTest {
 	}
 	@Test
 	public void testBuildListTrips() throws Exception{
-		List<Trips> buildList = ReflectionData.getInstance().buildList(Trips.class, data2);
+		Collection<Trips> buildList = ReflectionData.getInstance().buildList(Trips.class, data2);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getRoute_id(), is(equalTo("AAAA")));
@@ -130,49 +131,49 @@ public class ReflectionDataTest {
 	}
 	@Test
 	public void testBuildListStopTines() throws Exception{
-		List<StopTimes> buildList = ReflectionData.getInstance().buildList(StopTimes.class, data3);
+		Collection<StopTimes> buildList = ReflectionData.getInstance().buildList(StopTimes.class, data3);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(7)));
 		assertThat(buildList.iterator().next().getTrip_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListShapes() throws Exception{
-		List<Shapes> buildList = ReflectionData.getInstance().buildList(Shapes.class, data4);
+		Collection<Shapes> buildList = ReflectionData.getInstance().buildList(Shapes.class, data4);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getShape_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListAgency() throws Exception{
-		List<Agency> buildList = ReflectionData.getInstance().buildList(Agency.class, data5);
+		Collection<Agency> buildList = ReflectionData.getInstance().buildList(Agency.class, data5);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getAgency_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListStops() throws Exception{
-		List<Stops> buildList = ReflectionData.getInstance().buildList(Stops.class, data6);
+		Collection<Stops> buildList = ReflectionData.getInstance().buildList(Stops.class, data6);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getStop_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListCalendar() throws Exception{
-		List<Calendar> buildList = ReflectionData.getInstance().buildList(Calendar.class, data7);
+		Collection<Calendar> buildList = ReflectionData.getInstance().buildList(Calendar.class, data7);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getService_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListCalendarDates() throws Exception{
-		List<CalendarDates> buildList = ReflectionData.getInstance().buildList(CalendarDates.class, data8);
+		Collection<CalendarDates> buildList = ReflectionData.getInstance().buildList(CalendarDates.class, data8);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getService_id(), is(equalTo("AAAA")));
 	}
 	@Test
 	public void testBuildListCalendarTransfers() throws Exception{
-		List<Transfers> buildList = ReflectionData.getInstance().buildList(Transfers.class, data9);
+		Collection<Transfers> buildList = ReflectionData.getInstance().buildList(Transfers.class, data9);
 		assertThat(buildList, notNullValue());
 		assertThat(buildList.size(), is(equalTo(1)));
 		assertThat(buildList.iterator().next().getFrom_stop_id(), is(equalTo("AAAA")));

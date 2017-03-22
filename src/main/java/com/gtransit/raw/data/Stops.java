@@ -6,7 +6,7 @@ import com.gtransit.graph.annotations.GraphProperty;
 public class Stops implements RawData {
 
 	@GraphProperty("stopId")
-	@CsvFieldOrdering(position=3)
+	@CsvFieldOrdering(position=0)
 	private String stop_id; 
 	
 	@GraphProperty("code")
@@ -14,27 +14,27 @@ public class Stops implements RawData {
 	private String stop_code;
 	
 	@GraphProperty("name")
-	@CsvFieldOrdering(position=7)
+	@CsvFieldOrdering(position=2)
 	private String stop_name;
 	
 	@GraphProperty("description")
-	@CsvFieldOrdering(position=6)
+	@CsvFieldOrdering(position=3)
 	private String stop_desc;
 	
 	@GraphProperty("latitude")
-	@CsvFieldOrdering(position=0)
+	@CsvFieldOrdering(position=4)
 	private String stop_lat;
 	
 	@GraphProperty("longitude")
-	@CsvFieldOrdering(position=2)
+	@CsvFieldOrdering(position=5)
 	private String stop_lon;
 	
 	@GraphProperty("agencyId")
-	@CsvFieldOrdering(position=9)
+	@CsvFieldOrdering(position=6)
 	private String zone_id;
 	
 	@GraphProperty("url")
-	@CsvFieldOrdering(position=4)
+	@CsvFieldOrdering(position=7)
 	private String stop_url;
 	
 	@GraphProperty("type")
@@ -42,7 +42,7 @@ public class Stops implements RawData {
 	private String location_type;
 	
 	@GraphProperty("parentStation")
-	@CsvFieldOrdering(position=5)
+	@CsvFieldOrdering(position=9)
 	private String parent_station;
 
 	public String getStop_id() {

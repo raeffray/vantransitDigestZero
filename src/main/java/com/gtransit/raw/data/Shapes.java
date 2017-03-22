@@ -1,22 +1,28 @@
 package com.gtransit.raw.data;
 
+import com.gtransit.csv.annotations.CsvFieldOrdering;
 import com.gtransit.graph.annotations.GraphProperty;
 
 public class Shapes implements RawData {
 	
 	@GraphProperty("shapeId")
+	@CsvFieldOrdering(position=0)
 	private String shape_id; 
 	
 	@GraphProperty("latitude")
+	@CsvFieldOrdering(position=1)
 	private String shape_pt_lat;
 	
 	@GraphProperty("longitude")
+	@CsvFieldOrdering(position=2)
 	private String shape_pt_lon;
 	
 	@GraphProperty("sequence")
+	@CsvFieldOrdering(position=3)
 	private String shape_pt_sequence;
 	
 	@GraphProperty("traveldDistance")
+	@CsvFieldOrdering(position=4)
 	private String shape_dist_traveled;
 
 	public String getShape_id() {
